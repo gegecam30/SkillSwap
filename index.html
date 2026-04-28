@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap Campus | Ecosistema Colaborativo</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <span class="gradient-text">SkillSwap</span> Campus
+        </div>
+        <div class="wallet">
+            <span class="wallet-label">Billetera:</span>
+            <div class="wallet-badge">
+                <span id="ch-balance">150</span> CH
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Intercambia talento, <br> <span class="gradient-text">no dinero.</span></h1>
+            <p>Conecta con estudiantes de la UPC. Usa tus Créditos de Habilidad (CH) para obtener apoyo técnico y creativo garantizado por nuestro sistema Escrow.</p>
+            <button class="btn-primary" id="btn-publicar">Publicar una Necesidad</button>
+        </section>
+
+        <section class="dashboard">
+            <h2>Matchmaking Reciente</h2>
+            <div class="grid-cards">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="tag-request">Busco Programador Backend</span>
+                        <span class="escrow-badge">🛡️ Escrow Seguro</span>
+                    </div>
+                    <h3>Integración de API para Proyecto "ChocoFly"</h3>
+                    <p class="card-user">Por: Alumno de Negocios (Sede San Miguel)</p>
+                    <div class="card-footer">
+                        <span class="price">Pago: <strong>50 CH</strong></span>
+                        <button class="btn-secondary transition-btn">Postular</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="tag-offer">Ofrezco Diseño UX/UI</span>
+                        <span class="escrow-badge">🛡️ Escrow Seguro</span>
+                    </div>
+                    <h3>Diseño de App con Lean UX Canvas</h3>
+                    <p class="card-user">Por: Alumno de Sistemas (Sede Monterrico)</p>
+                    <div class="card-footer">
+                        <span class="price">Costo: <strong>30 CH</strong></span>
+                        <button class="btn-secondary transition-btn">Contratar</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
