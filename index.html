@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillSwap Campus | Ecosistema Colaborativo</title>
+    <title>SkillSwap Campus | Red Social Académica</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -21,27 +21,33 @@
         </div>
     </header>
 
-    <main class="container">
-        <section class="hero">
-            <h1>Intercambia talento, <br> <span class="gradient-text">no dinero.</span></h1>
-            <p>Conecta con estudiantes de la UPC. Usa tus Créditos de Habilidad (CH) para obtener apoyo técnico y creativo garantizado por nuestro sistema Escrow.</p>
-            <button class="btn-primary" id="btn-publicar">Publicar una Necesidad</button>
-        </section>
+    <nav class="social-nav">
+        <div class="nav-container">
+            <button class="nav-item active" data-target="view-feed">🌐 Explorar Feed</button>
+            <button class="nav-item" data-target="view-escrow">🤝 Mis Contratos</button>
+            <button class="nav-item" data-target="view-profile">👤 Mi Perfil</button>
+        </div>
+    </nav>
 
-        <section class="dashboard">
-            <h2>Matchmaking Reciente</h2>
+    <main class="container">
+        
+        <section id="view-feed" class="view-section active">
+            <div class="hero-mini">
+                <h2>Intercambia talento, <span class="gradient-text">no dinero.</span></h2>
+                <button class="btn-primary" id="btn-publicar">Publicar una Necesidad</button>
+            </div>
+
             <div class="grid-cards">
-                
                 <div class="card">
                     <div class="card-header">
                         <span class="tag-request">Busco Programador Backend</span>
                         <span class="escrow-badge">🛡️ Escrow Seguro</span>
                     </div>
-                    <h3>Integración de API para Proyecto "ChocoFly"</h3>
+                    <h3>Integración de API para "ChocoFly"</h3>
                     <p class="card-user">Por: Alumno de Negocios (Sede San Miguel)</p>
                     <div class="card-footer">
                         <span class="price">Pago: <strong>50 CH</strong></span>
-                        <button class="btn-secondary transition-btn">Postular</button>
+                        <button class="btn-secondary action-btn">Postular</button>
                     </div>
                 </div>
 
@@ -54,12 +60,48 @@
                     <p class="card-user">Por: Alumno de Sistemas (Sede Monterrico)</p>
                     <div class="card-footer">
                         <span class="price">Costo: <strong>30 CH</strong></span>
-                        <button class="btn-secondary transition-btn">Contratar</button>
+                        <button class="btn-secondary action-btn">Contratar</button>
                     </div>
                 </div>
-
             </div>
         </section>
+
+        <section id="view-escrow" class="view-section">
+            <h2>Contratos Activos y Fideicomisos</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Los créditos de estos proyectos están congelados hasta la validación mutua[cite: 56].</p>
+            
+            <div class="grid-cards">
+                <div class="card" style="border-color: rgba(52, 211, 153, 0.5);">
+                    <div class="card-header">
+                        <span class="tag-offer">En Progreso</span>
+                        <span class="escrow-badge" style="color: #34d399;">🔒 45 CH Retenidos</span>
+                    </div>
+                    <h3>Revisión de Código C++</h3>
+                    <p class="card-user">Proveedor: Gengis C. (Tú)</p>
+                    <div class="card-footer">
+                        <span class="price">Estado: <strong>Esperando entrega</strong></span>
+                        <button class="btn-secondary">Entregar Trabajo</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-profile" class="view-section">
+            <div class="profile-header card">
+                <div class="profile-info">
+                    <h2>Gengis C.</h2>
+                    <p class="tag-offer" style="display: inline-block; margin-top: 10px;">Rango: Experto 🌟</p>
+                </div>
+                <div class="profile-stats">
+                    <p>Trabajos Completados: <strong>12</strong></p>
+                    <p>Resolución de Disputas: <strong>Auditor Activo</strong></p>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Mi Portafolio Verificable</h3>
+            <p style="color: var(--text-muted);">Proyectos académicos validados por la comunidad SSC[cite: 64].</p>
+            </section>
+
     </main>
 
     <script src="js/app.js"></script>
