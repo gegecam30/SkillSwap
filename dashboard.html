@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SkillSwap Campus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" fill="url(#logoGradient)"/>
+                        <path d="M15 20L18 23L25 16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#A78BFA"/>
+                                <stop offset="100%" stop-color="#EC4899"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">SkillSwap</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-section="dashboard">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M8 2H2V8H8V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 2H12V8H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 12H12V18H18V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 12H2V18H8V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-section="marketplace">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Marketplace</span>
+            </a>
+            <a href="#" class="nav-item" data-section="my-tasks">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H16C17.1 18 18 17.1 18 16V4C18 2.9 17.1 2 16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6 10L9 13L14 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Mis Tareas</span>
+            </a>
+            <a href="#" class="nav-item" data-section="profile">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 10C12.7614 10 15 7.76142 15 5C15 2.23858 12.7614 0 10 0C7.23858 0 5 2.23858 5 5C5 7.76142 7.23858 10 10 10Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M10 12C4.47715 12 0 14.4772 0 17.5C0 18.3284 0.671573 19 1.5 19H18.5C19.3284 19 20 18.3284 20 17.5C20 14.4772 15.5228 12 10 12Z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>Mi Perfil</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="handleLogout()">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 19H3C2.46957 19 1.96086 18.7893 1.58579 18.4142C1.21071 18.0391 1 17.5304 1 17V3C1 2.46957 1.21071 1.96086 1.58579 1.58579C1.96086 1.21071 2.46957 1 3 1H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 15L19 10L14 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19 10H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Cerrar sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                <p class="page-subtitle" id="pageSubtitle">Bienvenido de vuelta</p>
+            </div>
+            <div class="header-right">
+                <div class="user-profile" id="userProfile">
+                    <div class="user-avatar">
+                        <span id="userInitials">--</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Cargando...</div>
+                        <div class="user-code" id="userCode">---</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboardSection" class="content-section active">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #A78BFA 0%, #EC4899 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Créditos Disponibles</div>
+                        <div class="stat-value" id="userCredits">100</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M16 2H8C6.9 2 6 2.9 6 4V20C6 21.1 6.9 22 8 22H16C17.1 22 18 21.1 18 20V4C18 2.9 17.1 2 16 2Z" fill="white"/>
+                            <path d="M9 10L11 12L15 8" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Tareas Completadas</div>
+                        <div class="stat-value" id="completedTasks">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #34D399 0%, #10B981 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Rating Promedio</div>
+                        <div class="stat-value" id="userRating">5.0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" fill="white"/>
+                            <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Miembro desde</div>
+                        <div class="stat-value stat-date" id="joinedDate">2026</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Section -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2 class="section-title">Mis Habilidades</h2>
+                    <button class="btn btn-secondary btn-sm">+ Agregar</button>
+                </div>
+                <div class="skills-container" id="userSkills">
+                    <!-- Skills will be dynamically loaded -->
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2 class="section-title">Actividad Reciente</h2>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: linear-gradient(135deg, #A78BFA, #EC4899);">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 2L12.5 7L18 8L14 12L15 18L10 15L5 18L6 12L2 8L7.5 7L10 2Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">¡Bienvenido a SkillSwap Campus!</div>
+                            <div class="activity-description">Has recibido 100 créditos de bienvenida</div>
+                            <div class="activity-time">Hace unos momentos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marketplace Section -->
+        <section id="marketplaceSection" class="content-section">
+            <div class="marketplace-grid">
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-avatar" style="background: linear-gradient(135deg, #60A5FA, #3B82F6);">
+                            <span>JD</span>
+                        </div>
+                        <div class="service-user">
+                            <div class="service-name">Juan Díaz</div>
+                            <div class="service-rating">⭐ 4.8</div>
+                        </div>
+                    </div>
+                    <h3 class="service-title">Diseño de Logos Profesionales</h3>
+                    <p class="service-description">Creo logos únicos y memorables para tu marca o proyecto.</p>
+                    <div class="service-tags">
+                        <span class="tag">Diseño</span>
+                        <span class="tag">Branding</span>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">25 CH</div>
+                        <button class="btn btn-primary btn-sm">Solicitar</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-avatar" style="background: linear-gradient(135deg, #34D399, #10B981);">
+                            <span>MR</span>
+                        </div>
+                        <div class="service-user">
+                            <div class="service-name">María Rodríguez</div>
+                            <div class="service-rating">⭐ 5.0</div>
+                        </div>
+                    </div>
+                    <h3 class="service-title">Desarrollo Web Frontend</h3>
+                    <p class="service-description">Landing pages responsivas con React y Tailwind CSS.</p>
+                    <div class="service-tags">
+                        <span class="tag">Programación</span>
+                        <span class="tag">Web</span>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">40 CH</div>
+                        <button class="btn btn-primary btn-sm">Solicitar</button>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-avatar" style="background: linear-gradient(135deg, #F59E0B, #F97316);">
+                            <span>CP</span>
+                        </div>
+                        <div class="service-user">
+                            <div class="service-name">Carlos Pérez</div>
+                            <div class="service-rating">⭐ 4.9</div>
+                        </div>
+                    </div>
+                    <h3 class="service-title">Estrategia de Marketing Digital</h3>
+                    <p class="service-description">Plan completo de contenido para redes sociales.</p>
+                    <div class="service-tags">
+                        <span class="tag">Marketing</span>
+                        <span class="tag">Social Media</span>
+                    </div>
+                    <div class="service-footer">
+                        <div class="service-price">30 CH</div>
+                        <button class="btn btn-primary btn-sm">Solicitar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Tasks Section -->
+        <section id="myTasksSection" class="content-section">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="38" stroke="url(#emptyGradient)" stroke-width="4"/>
+                        <path d="M40 20V60M20 40H60" stroke="url(#emptyGradient)" stroke-width="4" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="emptyGradient" x1="0" y1="0" x2="80" y2="80">
+                                <stop offset="0%" stop-color="#A78BFA"/>
+                                <stop offset="100%" stop-color="#EC4899"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No tienes tareas activas</h3>
+                <p class="empty-description">Explora el marketplace y encuentra proyectos interesantes</p>
+                <button class="btn btn-primary" onclick="switchSection('marketplace')">Ir al Marketplace</button>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profileSection" class="content-section">
+            <div class="profile-container">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <span id="profileInitials">--</span>
+                        </div>
+                        <h2 class="profile-name" id="profileName">Cargando...</h2>
+                        <p class="profile-code" id="profileCode">U----------</p>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="profile-stat-value" id="profileCredits">100</div>
+                            <div class="profile-stat-label">Créditos</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value" id="profileTasks">0</div>
+                            <div class="profile-stat-label">Completadas</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value" id="profileRating">5.0</div>
+                            <div class="profile-stat-label">Rating</div>
+                        </div>
+                    </div>
+                    <div class="profile-skills" id="profileSkills">
+                        <!-- Skills loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="dashboard-script.js"></script>
+</body>
+</html>
