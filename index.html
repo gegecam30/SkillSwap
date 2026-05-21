@@ -397,9 +397,12 @@
      DASHBOARD
 ═══════════════════════════════════════════ -->
 <div class="screen" id="dashboard">
-  <aside class="sidebar">
-    <div class="sb-header">
-      <div class="sb-logo">
+  <aside class="sidebar" id="mainSidebar">
+    <div class="sb-header" style="display: flex; align-items: center; gap: 10px;">
+      <button class="sb-toggle-btn" onclick="toggleSidebar()" style="background: none; border: none; color: var(--text1); cursor: pointer; padding: 4px;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+      <div class="sb-logo" onclick="goTo('app', 'home')" style="cursor: pointer; flex: 1;">
         <img src="img/SkillswapLogo.jpg" alt="SkillSwap Logo" class="sb-logo-img">
         <span class="sb-logo-text">SkillSwap</span>
       </div>
@@ -647,6 +650,14 @@
         <span class="experts-title">respondieron a tu ticket</span>
       </div>
       <div class="expert-list" id="expertList"></div>
+      
+      <!-- NUEVO: Dejar ticket pendiente en marketplace -->
+      <div style="margin-top: 16px; text-align: center;">
+        <p style="color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">¿Ninguno te convence o no hay expertos disponibles?</p>
+        <button class="btn btn-outline" style="width:100%; border-color: var(--p-purple); color: #fff;" onclick="postTicketToMarketplace()">
+          Dejar pendiente en Marketplace
+        </button>
+      </div>
     </div>
   </div>
 </div>

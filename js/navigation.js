@@ -80,3 +80,11 @@ function switchSection(btn) {
   if (sec === 'tasks'       && typeof renderTasks       === 'function') renderTasks();
   if (sec === 'profile'     && typeof renderProfile     === 'function') renderProfile();
 }
+
+// ── Toggle Sidebar ──
+function toggleSidebar() {
+  const sb = document.getElementById('mainSidebar');
+  if (sb) {
+    sb.classList.toggle('collapsed');
+  }
+}

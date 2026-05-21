@@ -171,9 +171,10 @@ async function renderMarketplace() {
         }
 
         const tagsHtml = s.tags.map(t => `<span class="svc-tag">${t}</span>`).join('');
+        const isBusco = s.title.startsWith('[BUSCO]');
         const isCompleted = window.currentUser?.completedMissions?.includes(s.id);
-        const btnStyle = isCompleted ? 'background:var(--surface2); color:var(--text3); border:none; cursor:not-allowed;' : '';
-        const btnText  = isCompleted ? 'Completada ✅' : (s.price === 0 ? '▶ Iniciar Misión' : 'Solicitar');
+        const btnStyle = isCompleted ? 'background:var(--surface2); color:var(--text3); border:none; cursor:not-allowed;' : (isBusco ? 'background:linear-gradient(135deg, #F59E0B, #F97316); border:none;' : '');
+        const btnText  = isCompleted ? 'Completada ✅' : (s.price === 0 ? '▶ Iniciar Misión' : (isBusco ? 'Aceptar Trabajo' : 'Solicitar'));
 
         card.innerHTML = `
           <div class="svc-head">
@@ -183,7 +184,7 @@ async function renderMarketplace() {
               <div class="svc-stars">⭐ 5.0</div>
             </div>
           </div>
-          <div class="svc-title">${s.title}</div>
+          <div class="svc-title" style="${isBusco ? 'color:#F59E0B;' : ''}">${s.title}</div>
           <div class="svc-desc">${s.description}</div>
           <div class="svc-tags">${tagsHtml}</div>
           <div class="svc-foot">
@@ -240,27 +241,47 @@ async function requestService(serviceId, providerId, title, price) {
     return;
   }
 
-  if (window.currentUser.credits < price) {
+  const isBusco = title.startsWith('[BUSCO]');
+
+  if (!isBusco && window.currentUser.credits < price) {
     if(typeof pushNotif === 'function') pushNotif('⚠️', 'Sin créditos', 'No tienes suficientes CH.', '#ff2a6d');
     return;
   }
 
   try {
+    const payload = isBusco ? {
+      sender_id: providerId, // El que pide el trabajo paga
+      receiver_id: window.currentUser.id, // Yo acepto, yo cobro
+      service_id: serviceId,
+      amount: price
+    } : {
+      sender_id: window.currentUser.id, // Yo solicito, yo pago
+      receiver_id: providerId, // El experto cobra
+      service_id: serviceId,
+      amount: price
+    };
+
     const response = await fetch(`${API}/transactions/escrow`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender_id: window.currentUser.id, receiver_id: providerId, service_id: serviceId, amount: price })
+      body: JSON.stringify(payload)
     });
+    
     const result = await response.json();
     if (result.error) {
       if(typeof pushNotif === 'function') pushNotif('❌', 'Error', result.error, '#ff2a6d');
       return;
     }
-
-    window.currentUser.credits -= price;
-    localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
-    if(document.getElementById('wbCredits')) document.getElementById('wbCredits').textContent = window.currentUser.credits;
-    if(typeof pushNotif === 'function') pushNotif('🔒', 'Escrow Activado', `Solicitud enviada. ${price} CH congelados.`, '#A78BFA');
+    
+    if (isBusco) {
+      if(typeof pushNotif === 'function') pushNotif('🤝', 'Trabajo Aceptado', `Los ${price} CH están en Escrow. ¡Manos a la obra!`, '#F59E0B');
+      // No restamos saldo porque nosotros cobramos.
+    } else {
+      window.currentUser.credits -= price;
+      localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+      if(document.getElementById('wbCredits')) document.getElementById('wbCredits').textContent = window.currentUser.credits;
+      if(typeof pushNotif === 'function') pushNotif('🔒', 'Escrow Activado', `Solicitud enviada. ${price} CH congelados.`, '#A78BFA');
+    }
     updateCharts();
   } catch (error) {
     if(typeof pushNotif === 'function') pushNotif('🔌', 'Sin Conexión', 'No se pudo contactar al sistema de protección.', '#ff2a6d');

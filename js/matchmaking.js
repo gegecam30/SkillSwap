@@ -5,37 +5,20 @@
 ═══════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────
-   DATA: Expertos simulados
+   DATA: Expertos y Categorías
 ───────────────────────────────────────── */
-const EXPERTS_DB = {
-  'Modelado 3D / AutoCAD': [
-    { id:'m1', name:'Mateo Ríos',     major:'Ing. Civil - 8vo ciclo',     icon:'🦊', bg:'linear-gradient(135deg,#F59E0B,#F97316)', stars:4.9, jobs:23, badge:'Experto AutoCAD', portfolio:['🏗️','📐','🏢'] },
-    { id:'m2', name:'Valeria Cruz',   major:'Arquitectura - 6to ciclo',   icon:'🌸', bg:'linear-gradient(135deg,#EC4899,#BE185D)', stars:4.7, jobs:14, badge:'AutoCAD Pro',    portfolio:['🏛️','📏','🗺️'] },
-    { id:'m3', name:'Rodrigo Puma',   major:'Ing. Industrial - 9no ciclo',icon:'🔮', bg:'linear-gradient(135deg,#8B5CF6,#6D28D9)', stars:4.8, jobs:31, badge:'3D Expert',      portfolio:['⚙️','🔧','📊'] },
-  ],
-  'Diseño Gráfico': [
-    { id:'d1', name:'Ana García',     major:'Diseño - 5to ciclo',         icon:'🦄', bg:'linear-gradient(135deg,#A78BFA,#EC4899)', stars:5.0, jobs:42, badge:'UI/UX Pro',      portfolio:['🎨','✏️','🖼️'] },
-    { id:'d2', name:'Camila Flores',  major:'Comunicación - 7mo ciclo',   icon:'🌿', bg:'linear-gradient(135deg,#34D399,#10B981)', stars:4.9, jobs:18, badge:'Diseñadora',     portfolio:['🖌️','📱','💡'] },
-  ],
-  'Programación': [
-    { id:'p1', name:'Luis Ramos',     major:'Ing. Sistemas - 8vo ciclo',  icon:'🐬', bg:'linear-gradient(135deg,#60A5FA,#3B82F6)', stars:4.9, jobs:37, badge:'React Expert',   portfolio:['💻','⚡','🚀'] },
-    { id:'p2', name:'Diego Paz',      major:'Ing. Software - 9no ciclo',  icon:'🐳', bg:'linear-gradient(135deg,#06B6D4,#0284C7)', stars:5.0, jobs:28, badge:'Full Stack',     portfolio:['🔮','🛠️','📡'] },
-    { id:'p3', name:'Fernanda Ñique', major:'Ing. Sistemas - 7mo ciclo',  icon:'⚡', bg:'linear-gradient(135deg,#A78BFA,#60A5FA)', stars:4.8, jobs:19, badge:'Backend Dev',    portfolio:['🗄️','🔐','📦'] },
-  ],
-  'Marketing Digital': [
-    { id:'mk1', name:'Sofía Mendez',  major:'Marketing - 6to ciclo',      icon:'🌸', bg:'linear-gradient(135deg,#34D399,#10B981)', stars:5.0, jobs:26, badge:'Growth Expert',  portfolio:['📈','📱','🎯'] },
-    { id:'mk2', name:'Bruno Salas',   major:'Administración - 8vo ciclo', icon:'🔥', bg:'linear-gradient(135deg,#F97316,#EF4444)', stars:4.7, jobs:15, badge:'SEO/SEM Pro',    portfolio:['🔍','📊','💰'] },
-  ],
-  'Idiomas': [
-    { id:'i1', name:'María Torres',   major:'Letras - 7mo ciclo',         icon:'🌵', bg:'linear-gradient(135deg,#84CC16,#22C55E)', stars:4.9, jobs:33, badge:'English B2+',    portfolio:['📝','📖','🌐'] },
-  ],
-  'Matemáticas / Estadística': [
-    { id:'st1', name:'Carlos Vega',   major:'Estadística - 9no ciclo',    icon:'🦊', bg:'linear-gradient(135deg,#F59E0B,#F97316)', stars:4.8, jobs:21, badge:'Stats Pro',      portfolio:['📊','📉','🧮'] },
-    { id:'st2', name:'Pablo Huanca',  major:'Ing. Matemática - 8vo ciclo',icon:'🔮', bg:'linear-gradient(135deg,#8B5CF6,#6D28D9)', stars:4.9, jobs:17, badge:'Cálculo Expert', portfolio:['∫','Σ','π'] },
-  ],
-};
+const CATEGORIES = [
+  'Modelado 3D / AutoCAD',
+  'Diseño Gráfico',
+  'Programación',
+  'Marketing Digital',
+  'Idiomas',
+  'Matemáticas / Estadística'
+];
 
-const CATEGORIES = Object.keys(EXPERTS_DB);
+const EXPERTS_DB = {
+  system: { id:'system', name:'SkillSwap System', major:'Experto Guía (Tutorial)', icon:'🤖', bg:'linear-gradient(135deg,#A78BFA,#EC4899)', stars:5.0, jobs:99, badge:'Guía', portfolio:['🎓'] }
+};
 
 /* ─────────────────────────────────────────
    STATE
@@ -87,7 +70,7 @@ function selectUrgency(btn) {
 /* ─────────────────────────────────────────
    STEP 2: Search Experts (with spinner)
 ───────────────────────────────────────── */
-function searchExperts() {
+async function searchExperts() {
   const category = document.getElementById('ticketCategory').value;
   const desc     = document.getElementById('ticketDesc').value.trim();
   const ch       = parseInt(document.getElementById('ticketCH').value);
@@ -105,18 +88,88 @@ function searchExperts() {
   document.getElementById('ticketSearching').style.display   = 'block';
   document.getElementById('ticketModalFoot').style.display   = 'none';
 
-  // Simulate matching delay
-  const found = (EXPERTS_DB[category] || []).slice(0, 3);
-  setTimeout(() => {
+  try {
+    const res = await fetch(`${API}/profiles/category/${encodeURIComponent(category)}`);
+    const data = await res.json();
+    let found = [];
+    
+    if (data.success && data.experts && data.experts.length > 0) {
+      // Filtrar al mismo usuario
+      found = data.experts.filter(e => e.id !== window.currentUser.id).slice(0, 3);
+    }
+    
+    // Si no se encuentran suficientes, agregar el de tutorial
+    if (found.length === 0) {
+      found.push(EXPERTS_DB.system);
+    }
+
+    setTimeout(() => {
+      closeModal('modalTicket');
+      document.getElementById('ticketFormContent').style.display = 'block';
+      document.getElementById('ticketSearching').style.display   = 'none';
+      document.getElementById('ticketModalFoot').style.display   = 'flex';
+      
+      pushNotif('🔔','Búsqueda finalizada',`Encontramos ${found.length} opciones para ti.`,'#E9D5FF');
+      
+      setTimeout(() => showExperts(found), 600);
+    }, 1500); // 1.5s spinner
+  } catch (err) {
+    console.error(err);
+    pushNotif('❌','Error','No se pudo buscar expertos en la red.','#FBE2F4');
     closeModal('modalTicket');
-    // Reset modal for next open
+    
+    // Reset modal state
     document.getElementById('ticketFormContent').style.display = 'block';
     document.getElementById('ticketSearching').style.display   = 'none';
     document.getElementById('ticketModalFoot').style.display   = 'flex';
-    // Push notification
-    pushNotif('🔔','¡Coincidencias encontradas!',`Tienes ${found.length} expertos interesados en tu ticket.`,'#E9D5FF');
-    setTimeout(() => showExperts(found), 600);
-  }, 3200);
+  }
+}
+
+async function postTicketToMarketplace() {
+  if (!activeTicket) return;
+
+  const desc = activeTicket.desc;
+  const ch = activeTicket.ch;
+  const category = activeTicket.category;
+
+  try {
+    const response = await fetch(`${API}/services/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        provider_id: window.currentUser.id,
+        title: `[BUSCO] ${category}`,
+        description: desc,
+        price: ch
+      })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      pushNotif('✅', 'Ticket publicado', 'Tu ticket está visible en el Marketplace. Los CH se descontarán cuando alguien lo acepte.', '#34D399');
+      
+      const pendingGig = {
+        id: result.data && result.data[0] ? result.data[0].id : 'gig_' + Date.now(),
+        category: category,
+        expertName: 'Esperando Experto...',
+        status: 'pending',
+        desc: desc,
+        ch: ch,
+        chat: []
+      };
+      
+      activeGigs.push(pendingGig);
+      saveGigs();
+      
+      closeModal('modalExperts');
+      if (document.getElementById('secTasks').classList.contains('active')) renderTasks();
+    } else {
+      pushNotif('❌', 'Error', result.error || 'No se pudo publicar', '#FBE2F4');
+    }
+  } catch (err) {
+    console.error(err);
+    pushNotif('❌', 'Error de red', 'No se pudo conectar al servidor.', '#FBE2F4');
+  }
 }
 
 /* ─────────────────────────────────────────
@@ -134,12 +187,16 @@ function showExperts(experts) {
     card.className = 'expert-card';
     card.dataset.id = exp.id;
 
-    const portHTML = exp.portfolio.map(p =>
+    const portHTML = (exp.portfolio || []).map(p =>
       `<div class="port-thumb" title="Ver trabajo">${p}</div>`
     ).join('');
 
+    const bgImage = exp.avatar_url ? `url('${exp.avatar_url}')` : exp.bg;
+    const isImage = exp.avatar_url ? 'background-size:cover;background-position:center;' : '';
+    const iconStr = exp.avatar_url ? '' : exp.icon;
+
     card.innerHTML = `
-      <div class="expert-av" style="background:${exp.bg};">${exp.icon}</div>
+      <div class="expert-av" style="background:${bgImage}; ${isImage}">${iconStr}</div>
       <div class="expert-info">
         <div class="expert-name">${exp.name}</div>
         <div class="expert-major">${exp.major}</div>
