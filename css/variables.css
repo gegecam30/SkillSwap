@@ -1,45 +1,39 @@
 /* css/variables.css */
 :root {
-  /* ── Fondo y Superficies (Extracto de tu página) ── */
-  --bg: #050a0d; 
-  --surface: #081217;
+  --bg:       #050a0d;
+  --surface:  #081217;
   --surface2: rgba(0, 229, 255, 0.03);
-  --sidebar: #050a0d;
-  --card: #081217;
-  
-  /* ── Acentos Cyan Neón ── */
-  --cyan-main: #00e5ff;
-  --cyan-dark: #00838f;
+  --sidebar:  #050a0d;
+  --card:     #0a1a20;
+
+  --cyan:       #00e5ff;
+  --cyan-dark:  #00838f;
   --cyan-muted: #00bcd4;
 
-  /* ── Textos ── */
-  --text: #c9e8f0;
-  --text2: #bdf2fb;
-  --text3: #92dce8;
-  
-  /* ── Compatibilidad con tus CSS actuales (El truco mágico) ── */
-  --purple: var(--cyan-main);
-  --pink: var(--cyan-dark);
-  --blue: var(--cyan-muted);
-  --green: #00e5ff;
+  /* alias usados por el resto del CSS */
+  --purple: #00e5ff;
+  --pink:   #00838f;
+  --blue:   #00bcd4;
+  --green:  #00e5ff;
   --orange: #4dd0e1;
 
-  --p-purple: rgba(0, 229, 255, 0.1);
-  --p-pink: rgba(0, 188, 212, 0.1);
-  --p-blue: rgba(0, 229, 255, 0.05);
-  --p-green: rgba(0, 229, 255, 0.15);
-  --p-yellow: rgba(77, 208, 225, 0.1);
+  --p-purple: rgba(0, 229, 255, 0.10);
+  --p-pink:   rgba(0, 188, 212, 0.10);
+  --p-blue:   rgba(0, 229, 255, 0.05);
+  --p-green:  rgba(0, 229, 255, 0.15);
+  --p-yellow: rgba(77, 208, 225, 0.10);
+  --p-orange: rgba(0, 229, 255, 0.08);
 
-  /* ── Bordes y Sombras al estilo Gexel ── */
-  --border: rgba(0, 229, 255, 0.2);
-  --shadow: 0 0 15px rgba(0, 229, 255, 0.05);
-  --shadow-lg: 0 0 30px rgba(0, 229, 255, 0.15), 0 20px 40px rgba(0,0,0,0.6);
-  
-  --radius: 8px;
-  --transition: 0.3s cubic-bezier(.34,1.56,.64,1);
-}
+  --text:  #c9e8f0;
+  --text2: #8ab8c4;
+  --text3: #4a7a8a;
 
-/* Forzar modo oscuro permanente */
-[data-theme="light"], [data-theme="dark"] {
-  --bg: #050a0d;
+  --border:    rgba(0, 229, 255, 0.18);
+  --shadow:    0 0 15px rgba(0, 229, 255, 0.05);
+  --shadow-lg: 0 0 30px rgba(0, 229, 255, 0.12), 0 20px 40px rgba(0,0,0,0.5);
+
+  --radius:    8px;
+  --sidebar-w: 260px;
+  --transition: 0.25s ease;
 }
+[data-theme="light"], [data-theme="dark"] { --bg: #050a0d; }

@@ -1,33 +1,66 @@
-/* ═══════════════════════════════════════════
-   NAVIGATION — navigation.js
-═══════════════════════════════════════════ */
+/* js/navigation.js
+   REGLA: Este archivo define goTo, switchPane y switchSection.
+   NO duplicar estas funciones en ningún otro archivo ni en el boot del HTML.
+*/
 
-function switchPane(pane) {
-  document.querySelectorAll('.form-pane').forEach(p => p.classList.remove('active'));
-  const targetPane = document.getElementById(pane + 'Pane');
-  if(targetPane) targetPane.classList.add('active');
-}
+// ── Ir a una pantalla ──
+function goTo(screenId, pane) {
+  // 1. Ocultar todas
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+  });
 
-function landingScrollTo(section) {
-  let targetId = '';
-  if (section === 'features') targetId = 'secFeatures';
-  if (section === 'team') targetId = 'secTeam';
-  if (section === 'how') targetId = 'secHow';
+  // 2. Activar la destino
+  const screen = document.getElementById(screenId);
+  if (!screen) { console.error('Screen no encontrada:', screenId); return; }
+  screen.classList.add('active');
 
-  const el = document.getElementById(targetId);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' });
+  // 3. Lógica por pantalla
+  if (screenId === 'auth') {
+    // Apagar el botón de Nuevo Ticket en esta pantalla
+    const fab = document.getElementById('fabTicket');
+    if (fab) fab.classList.add('hidden');
+    
+    switchPane(pane || 'login');
+  }
+  if (screenId === 'dashboard') {
+    initDashboard();
+    updateLiveBadge(true);
+    const fab = document.getElementById('fabTicket');
+    if (fab) fab.classList.remove('hidden');
+    const badge = document.getElementById('gigsCount');
+    if (badge) badge.textContent = activeGigs.filter(g => g.status !== 'done').length || 0;
+  }
+  if (screenId === 'landing') {
+    updateLiveBadge(false);
+    const fab = document.getElementById('fabTicket');
+    if (fab) fab.classList.add('hidden');
   }
 }
 
+// ── Cambiar entre Login / Register ──
+function switchPane(pane) {
+  document.querySelectorAll('.form-pane').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(pane + 'Pane');
+  if (target) target.classList.add('active');
+}
+
+// ── Scroll suave dentro del landing ──
+function landingScrollTo(section) {
+  const map = { features:'secFeatures', how:'secHow', team:'secTeam' };
+  const el  = document.getElementById(map[section] || section);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ── Cambiar sección en el dashboard ──
 function switchSection(btn) {
   document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
   const sec = btn.dataset.sec;
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  const targetSec = document.getElementById('sec' + sec.charAt(0).toUpperCase() + sec.slice(1));
-  if(targetSec) targetSec.classList.add('active');
+  const target = document.getElementById('sec' + sec.charAt(0).toUpperCase() + sec.slice(1));
+  if (target) target.classList.add('active');
 
   const titles = {
     home:        ['Dashboard',  'Resumen de tu actividad'],
@@ -36,49 +69,14 @@ function switchSection(btn) {
     tasks:       ['Mis Gigs',   'Tus intercambios activos'],
     profile:     ['Mi Perfil',  'Información y trayectoria'],
   };
-
   const [title, sub] = titles[sec] || ['', ''];
   const elTitle = document.getElementById('secTitle');
-  const elSub = document.getElementById('secSub');
-  if(elTitle) elTitle.textContent = title;
-  if(elSub) elSub.textContent = sub;
+  const elSub   = document.getElementById('secSub');
+  if (elTitle) elTitle.textContent = title;
+  if (elSub)   elSub.textContent   = sub;
 
   if (sec === 'marketplace' && typeof renderMarketplace === 'function') renderMarketplace();
-  if (sec === 'tasks' && typeof renderTasks === 'function') renderTasks();
-  if (sec === 'social' && typeof renderFeed === 'function') renderFeed();
-}
-
-/* Reemplaza o añade esta función al final de tu navigation.js */
-// js/navigation.js
-function goTo(screenId, pane) {
-  // 1. Ocultar todas las pantallas y limpiar activaciones
-  document.querySelectorAll('.screen').forEach(s => {
-    s.classList.remove('active');
-    s.style.display = 'none';
-  });
-
-  // 2. Activar la pantalla destino
-  const screen = document.getElementById(screenId);
-  if (screen) {
-    screen.classList.add('active');
-    screen.style.display = 'flex'; // Forzamos el display
-  }
-
-  // 3. Activar el panel específico (Login o Register)
-  if (screenId === 'auth') {
-    // Si no se especifica panel, forzamos 'login'
-    switchPane(pane || 'login'); 
-  }
-}
-
-function switchPane(pane) {
-  // Ocultar todos los paneles
-  document.querySelectorAll('.form-pane').forEach(p => p.classList.remove('active'));
-  
-  // Activar el deseado
-  const target = document.getElementById(pane + 'Pane');
-  if (target) {
-    target.classList.add('active');
-    target.style.display = 'block'; // Forzamos visibilidad
-  }
+  if (sec === 'social'      && typeof renderFeed        === 'function') renderFeed();
+  if (sec === 'tasks'       && typeof renderTasks       === 'function') renderTasks();
+  if (sec === 'profile'     && typeof renderProfile     === 'function') renderProfile();
 }

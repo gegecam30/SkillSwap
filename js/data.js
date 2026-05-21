@@ -1,10 +1,11 @@
+
 /* ═══════════════════════════════════════════
    DATA & CONSTANTS — data.js
    Cargado primero en index.html
 ═══════════════════════════════════════════ */
 
 const AVATARS = [
-  { bg: 'linear-gradient(135deg,#A78BFA,#EC4899)', icon: '🦄' },
+  { bg: '#050a0d', img: '/img/Avatar1.png' },
   { bg: 'linear-gradient(135deg,#60A5FA,#3B82F6)', icon: '🐬' },
   { bg: 'linear-gradient(135deg,#34D399,#10B981)', icon: '🌿' },
   { bg: 'linear-gradient(135deg,#F59E0B,#F97316)', icon: '🦊' },
