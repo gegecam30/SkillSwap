@@ -275,7 +275,8 @@ async function requestService(serviceId, providerId, title, price) {
     
     if (isBusco) {
       if(typeof pushNotif === 'function') pushNotif('🤝', 'Trabajo Aceptado', `Los ${price} CH están en Escrow. ¡Manos a la obra!`, '#F59E0B');
-      // No restamos saldo porque nosotros cobramos.
+      // Abrir chat con el solicitante
+      setTimeout(() => openDMChat(providerId, 'Cliente'), 500);
     } else {
       window.currentUser.credits -= price;
       localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
@@ -307,8 +308,25 @@ function renderFeed() {
       </div>
       <textarea id="postInput" placeholder="¿Qué habilidad buscas o qué proyecto estás armando?..." 
                 style="width: 100%; min-height: 70px; background: #081217; border: 1px solid var(--border); border-radius: 6px; padding: 10px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; resize: vertical; outline: none;"></textarea>
+      
+      <!-- Sección para adjuntar imagen/GIF -->
+      <div id="imageAttachSection" style="margin-top: 8px;">
+        <div id="imagePreview" style="display:none; margin-bottom:8px; position:relative;">
+          <img id="imagePreviewImg" style="max-width:100%; max-height:200px; border-radius:8px; border:1px solid var(--border);">
+          <button onclick="clearImageAttach()" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.7); border:none; color:white; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:14px;">✕</button>
+        </div>
+        <div id="imageUrlInput" style="display:none; margin-bottom:8px;">
+          <input type="text" id="postImageUrl" placeholder="Pega la URL de la imagen o GIF (Tenor, Giphy, Imgur...)" 
+                 style="width:100%; background:#081217; border:1px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text); font-family:'Inter',sans-serif; font-size:12px; outline:none;"
+                 oninput="previewImageUrl(this.value)">
+        </div>
+      </div>
+
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-        <span style="font-size: 11px; color: var(--text3); font-family: 'JetBrains Mono';">// Recuerda mantener el respeto comunitario</span>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button onclick="toggleImageInput()" style="background:none; border:1px solid var(--border); border-radius:6px; padding:6px 10px; cursor:pointer; color:var(--text2); font-size:16px; transition:all 0.2s;" title="Adjuntar imagen o GIF">📷</button>
+          <span style="font-size: 11px; color: var(--text3); font-family: 'JetBrains Mono';">// Recuerda mantener el respeto comunitario</span>
+        </div>
         <button class="btn btn-primary btn-sm" onclick="publishNewPost()">Publicar_</button>
       </div>
     </div>
@@ -327,6 +345,28 @@ function renderFeed() {
   `;
   
   fetchAndRenderPosts();
+}
+
+function toggleImageInput() {
+  const el = document.getElementById('imageUrlInput');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function previewImageUrl(url) {
+  const preview = document.getElementById('imagePreview');
+  const img = document.getElementById('imagePreviewImg');
+  if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+    img.src = url;
+    img.onerror = () => { preview.style.display = 'none'; };
+    img.onload = () => { preview.style.display = 'block'; };
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
+function clearImageAttach() {
+  document.getElementById('postImageUrl').value = '';
+  document.getElementById('imagePreview').style.display = 'none';
 }
 
 async function fetchAndRenderPosts() {
@@ -385,14 +425,27 @@ function renderFilteredPosts(category) {
   container.innerHTML = filteredPosts.map((p) => {
     const authorName = p.profiles?.display_name || 'Estudiante';
     const authorCode = p.profiles?.university_code || 'U----------';
+    const authorAvatar = p.profiles?.avatar_url;
     const initials = authorName.charAt(0).toUpperCase();
     const dateObj = new Date(p.created_at);
     const timeString = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
+    const avatarHTML = authorAvatar 
+      ? `<img src="${authorAvatar}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` 
+      : initials;
+
+    const imageHTML = p.image_url 
+      ? `<div style="margin-top:10px;"><img src="${p.image_url}" style="max-width:100%; max-height:400px; border-radius:8px; border:1px solid var(--border); object-fit:contain;" onerror="this.style.display='none'"></div>` 
+      : '';
+
+    // Obtenemos el author_id para el DM
+    const authorId = p.author_id || '';
+    const showDM = authorId && authorId !== window.currentUser?.id;
+
     return `
     <div class="post-card" style="animation: fadeInUp 0.4s ease forwards; background: var(--surface1); border: 1px solid var(--border); padding: 16px; border-radius: 8px; margin-bottom: 14px;">
       <div class="post-head" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-        <div class="post-av" style="background: var(--p-purple); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; color: #050a0d;">${initials}</div>
+        <div class="post-av" style="background: var(--p-purple); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; color: #050a0d; overflow:hidden; flex-shrink:0;">${avatarHTML}</div>
         <div style="flex: 1;">
           <div class="post-author" style="font-weight: 600; font-size: 14px; color: var(--text);">${authorName}</div>
           <div class="post-role" style="font-size: 11px; color: var(--cyan); font-family: 'JetBrains Mono';">${authorCode}</div>
@@ -403,6 +456,8 @@ function renderFilteredPosts(category) {
         </div>
       </div>
       <div class="post-body" style="font-size: 13.5px; color: var(--text2); line-height: 1.5; white-space: pre-wrap;">${p.content}</div>
+      ${imageHTML}
+      ${showDM ? `<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border);"><button class="btn btn-secondary btn-sm" onclick="openDMChat('${authorId}', '${authorName.replace(/'/g, "\\'")}')">💬 Enviar mensaje</button></div>` : ''}
     </div>
   `}).join('');
 }
@@ -421,10 +476,16 @@ async function publishNewPost() {
   btn.disabled = true;
 
   try {
+    const imgUrlEl = document.getElementById('postImageUrl');
+    const imageUrl = imgUrlEl ? imgUrlEl.value.trim() : '';
+    
+    const postBody = { author_id: window.currentUser.id, content: txt, category: cat };
+    if (imageUrl) postBody.image_url = imageUrl;
+
     const postRes = await fetch(`${API}/posts/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ author_id: window.currentUser.id, content: txt, category: cat })
+      body: JSON.stringify(postBody)
     });
     
     const postResult = await postRes.json();
@@ -454,6 +515,9 @@ async function publishNewPost() {
     }
 
     document.getElementById('postInput').value = '';
+    clearImageAttach();
+    const imageInputSection = document.getElementById('imageUrlInput');
+    if (imageInputSection) imageInputSection.style.display = 'none';
     // Volvemos a colocar el filtro en "Todos" visualmente
     const filterBtns = document.querySelectorAll('#secSocial .filter-btn');
     if(filterBtns.length > 0) applyFeedFilter('Todos', filterBtns[0]);
@@ -537,5 +601,113 @@ async function saveSelectedAvatar(newPathOrUrl) {
     }
   } catch (error) {
     console.error("Error sincronizando el avatar:", error);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   DM CHAT — Mensajería Directa
+═══════════════════════════════════════════ */
+let dmRecipientId = null;
+let dmRecipientName = '';
+let dmPollInterval = null;
+
+function openDMChat(recipientId, recipientName) {
+  if (!window.currentUser) return;
+  dmRecipientId = recipientId;
+  dmRecipientName = recipientName;
+
+  document.getElementById('dmChatTitle').textContent = `💬 ${recipientName}`;
+  document.getElementById('dmChatSub').textContent = 'Chat directo';
+  document.getElementById('dmInput').value = '';
+  
+  loadDMMessages();
+  openModal('modalDM');
+
+  // Polling cada 5 segundos para nuevos mensajes
+  if (dmPollInterval) clearInterval(dmPollInterval);
+  dmPollInterval = setInterval(loadDMMessages, 5000);
+}
+
+// Limpiar polling al cerrar el modal
+const originalCloseModal = window.closeModal || function(id) { document.getElementById(id)?.classList.remove('show'); };
+window.closeModal = function(id) {
+  if (id === 'modalDM' && dmPollInterval) {
+    clearInterval(dmPollInterval);
+    dmPollInterval = null;
+  }
+  // Llamar a la función original de matchmaking.js
+  document.getElementById(id)?.classList.remove('show');
+};
+
+async function loadDMMessages() {
+  if (!dmRecipientId || !window.currentUser) return;
+
+  try {
+    const res = await fetch(`${API}/messages/${window.currentUser.id}/${dmRecipientId}`);
+    const data = await res.json();
+
+    const container = document.getElementById('dmMessages');
+    if (!container) return;
+
+    if (!data.success || !data.messages || data.messages.length === 0) {
+      container.innerHTML = `
+        <div style="text-align:center; color:var(--text3); font-size:13px; padding:40px 20px;">
+          <div style="font-size:32px; margin-bottom:8px;">💬</div>
+          <p>No hay mensajes aún. ¡Sé el primero en escribir!</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = data.messages.map(m => {
+      const isMe = m.sender_id === window.currentUser.id;
+      const time = new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+      
+      return `
+        <div style="display:flex; justify-content:${isMe ? 'flex-end' : 'flex-start'};">
+          <div style="
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: ${isMe ? '14px 14px 4px 14px' : '14px 14px 14px 4px'};
+            background: ${isMe ? 'linear-gradient(135deg, var(--purple), var(--pink))' : 'var(--surface2)'};
+            color: ${isMe ? 'white' : 'var(--text)'};
+            font-size: 13px;
+            line-height: 1.4;
+            word-break: break-word;
+          ">
+            <div>${m.content}</div>
+            <div style="font-size:10px; opacity:0.6; margin-top:4px; text-align:right;">${time}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Auto-scroll al final
+    container.scrollTop = container.scrollHeight;
+  } catch (err) {
+    console.error('Error cargando mensajes:', err);
+  }
+}
+
+async function sendDM() {
+  const input = document.getElementById('dmInput');
+  const text = input.value.trim();
+  if (!text || !dmRecipientId || !window.currentUser) return;
+
+  input.value = '';
+
+  try {
+    await fetch(`${API}/messages/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender_id: window.currentUser.id,
+        receiver_id: dmRecipientId,
+        content: text
+      })
+    });
+
+    loadDMMessages();
+  } catch (err) {
+    console.error('Error enviando mensaje:', err);
+    if(typeof pushNotif === 'function') pushNotif('❌', 'Error', 'No se pudo enviar el mensaje.', '#ff2a6d');
   }
 }
