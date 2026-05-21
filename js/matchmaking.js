@@ -197,7 +197,7 @@ async function lockEscrow() {
 
   try {
     // Hacemos la petición POST a tu servidor FastAPI local
-    const response = await fetch('http://127.0.0.1:8000/transactions/escrow', {
+    const response = await fetch(`${API}/transactions/escrow`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

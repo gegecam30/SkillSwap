@@ -17,6 +17,7 @@
 }
 .nav-logo { display:flex; align-items:center; gap:12px; cursor:pointer; }
 .nav-logo svg { width:32px; height:32px; }
+.nav-logo-img { width:36px; height:36px; border-radius:8px; object-fit:cover; box-shadow:0 0 14px rgba(0,229,255,0.3); }
 .nav-logo-text { font-size:18px; }
 .nav-links { display:flex; gap:28px; }
 .nav-link {

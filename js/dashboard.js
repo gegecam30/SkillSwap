@@ -19,7 +19,7 @@ async function initDashboard() {
   const userId = session.id;
 
   try {
-    const response = await fetch(`http://127.0.0.1:8000/profile/${userId}`);
+    const response = await fetch(`${API}/profile/${userId}`);
     const result = await response.json();
 
     if (result.success) {
@@ -31,22 +31,22 @@ async function initDashboard() {
         code: p.university_code || p.uni_code || 'U----------',
         credits: p.balance !== undefined ? p.balance : 0,
         skills: p.skills || [],
-        avatar: session.avatar || 0,
         rating: 5.0,
         completedTasks: 0,
-        completedMissions: session.completedMissions || []
+        completedMissions: session.completedMissions || [],
+        // ── AQUÍ EL CAMBIO: Leemos directamente la ruta desde Supabase ──
+        avatarUrl: p.avatar_url || 'img/Avatar0.png'
       };
 
       localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
-
       const u = window.currentUser;
-      const av = (typeof AVATARS !== 'undefined' && AVATARS[u.avatar]) ? AVATARS[u.avatar] : { icon: u.name.charAt(0), bg: '#00e5ff' };
 
+      // ── Inyectamos la imagen directamente en el chip del Header ──
       const elChipAv = document.getElementById('chipAv');
-      if(elChipAv) {
-        elChipAv.textContent = av.icon;
-        elChipAv.style.background = av.bg;
+      if (elChipAv) {
+        elChipAv.innerHTML = `<img src="${u.avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
       }
+      
       if(document.getElementById('chipName')) document.getElementById('chipName').textContent = u.name.split(' ')[0];
       if(document.getElementById('chipCode')) document.getElementById('chipCode').textContent = u.code;
 
@@ -73,7 +73,7 @@ async function initDashboard() {
       updateSidebarBadge('tasks', 0);
       setTimeout(initCharts, 100);
       
-      // Llamamos a la nueva función de sincronización real
+      // Llamamos a la sincronización real
       syncPlatformStats(userId);
       
     } else {
@@ -87,7 +87,7 @@ async function initDashboard() {
 // ── NUEVA FUNCIÓN: Sincronizador de Estadísticas Reales ──
 async function syncPlatformStats(userId) {
   try {
-    const res = await fetch(`http://127.0.0.1:8000/platform/stats/${userId}`);
+    const res = await fetch(`${API}/platform/stats/${userId}`);
     const data = await res.json();
     
     if(data.success) {
@@ -148,7 +148,7 @@ async function renderMarketplace() {
   grid.innerHTML = '<div style="color:var(--cyan); padding:20px; font-family:\'JetBrains Mono\';">Cargando la red... <span class="cursor-blink"></span></div>';
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/services/');
+    const response = await fetch(`${API}/services/`);
     const result = await response.json();
 
     if (result.success) {
@@ -220,7 +220,7 @@ async function requestService(serviceId, providerId, title, price) {
 
     const recompensa = 20;
     try {
-      const response = await fetch('http://127.0.0.1:8000/profile/reward', {
+      const response = await fetch(`${API}/profile/reward`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: window.currentUser.id, amount: recompensa })
@@ -246,7 +246,7 @@ async function requestService(serviceId, providerId, title, price) {
   }
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/transactions/escrow', {
+    const response = await fetch(`${API}/transactions/escrow`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sender_id: window.currentUser.id, receiver_id: providerId, service_id: serviceId, amount: price })
@@ -310,7 +310,7 @@ function renderFeed() {
 
 async function fetchAndRenderPosts() {
   try {
-    const response = await fetch('http://127.0.0.1:8000/posts/');
+    const response = await fetch(`${API}/posts/`);
     const result = await response.json();
 
     if (result.success) {
@@ -400,7 +400,7 @@ async function publishNewPost() {
   btn.disabled = true;
 
   try {
-    const postRes = await fetch('http://127.0.0.1:8000/posts/', {
+    const postRes = await fetch(`${API}/posts/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ author_id: window.currentUser.id, content: txt, category: cat })
@@ -412,7 +412,7 @@ async function publishNewPost() {
     if (!window.currentUser.completedMissions) window.currentUser.completedMissions = [];
     
     if (!window.currentUser.completedMissions.includes('mission-002')) {
-      const rewRes = await fetch('http://127.0.0.1:8000/profile/reward', {
+      const rewRes = await fetch(`${API}/profile/reward`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: window.currentUser.id, amount: 20 })
@@ -461,18 +461,60 @@ function renderTasks() {
 
 function renderProfile() {
   if (!window.currentUser) return;
-  const u  = window.currentUser;
-  const av = (typeof AVATARS !== 'undefined' && AVATARS[u.avatar]) ? AVATARS[u.avatar] : { icon: u.name.charAt(0), bg: '#00e5ff' };
+  const u = window.currentUser;
 
-  if(document.getElementById('profAv')) { document.getElementById('profAv').textContent = av.icon; document.getElementById('profAv').style.background = av.bg; }
+  // ── Aplicar avatar con la URL extraída de Supabase ──
+  const profAv = document.getElementById('profAv');
+  if (profAv) {
+    profAv.innerHTML = `<img src="${u.avatarUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+  }
+  
   if(document.getElementById('profName')) document.getElementById('profName').textContent = u.name;
   if(document.getElementById('profCode')) document.getElementById('profCode').textContent = u.code;
   if(document.getElementById('profCreds')) document.getElementById('profCreds').textContent = u.credits;
   if(document.getElementById('profDone')) document.getElementById('profDone').textContent = u.completedTasks;
-  if(document.getElementById('profSkills')) document.getElementById('profSkills').innerHTML = u.skills.map(s => `<span class="s-tag">${s}</span>`).join('');
+  
+  if(document.getElementById('profSkills')) {
+    document.getElementById('profSkills').innerHTML = u.skills.map(s => `<span class="s-tag">${s}</span>`).join('');
+  }
 
   if(document.getElementById('tlList')) {
     document.getElementById('tlList').innerHTML = `
       <div class="tl-item"><div class="tl-dot">🚀</div><div class="tl-content"><div class="tl-event">Cuenta Verificada</div><div class="tl-date">Registrado</div><span class="tl-badge">Nuevo usuario</span></div></div>`;
+  }
+}
+
+async function saveSelectedAvatar(newPathOrUrl) {
+  if (!window.currentUser) return;
+
+  try {
+    const response = await fetch(`${API}/profile/update-avatar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: window.currentUser.id,
+        avatar_url: newPathOrUrl
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      // Actualizamos memoria local de inmediato
+      window.currentUser.avatarUrl = result.avatar_url;
+      
+      const session = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      session.avatarUrl = result.avatar_url;
+      localStorage.setItem('currentUser', JSON.stringify(session));
+      
+      // Refrescar componentes visuales
+      if(document.getElementById('chipAv')) {
+        document.getElementById('chipAv').innerHTML = `<img src="${result.avatar_url}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+      }
+      
+      if(typeof pushNotif === 'function') pushNotif('🖼️', 'Avatar actualizado', 'Tu nueva identidad visual ha sido guardada en la nube.', '#00e5ff');
+    }
+  } catch (error) {
+    console.error("Error sincronizando el avatar:", error);
   }
 }

@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon.ico" type="image/x-icon">
 <title>SkillSwap Campus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- Supabase JS (descomentar cuando conectes Supabase) -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
 <link rel="stylesheet" href="css/variables.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/landing.css">
@@ -75,14 +78,7 @@
 
   <nav class="landing-nav">
     <div class="nav-logo" onclick="document.getElementById('landing').scrollTop=0">
-      <svg viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="18" fill="url(#lg1)"/>
-        <path d="M15 20L18 23L25 16" stroke="#050a0d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        <defs><linearGradient id="lg1" x1="0" y1="0" x2="40" y2="40">
-          <stop offset="0%" stop-color="#00e5ff"/>
-          <stop offset="100%" stop-color="#00838f"/>
-        </linearGradient></defs>
-      </svg>
+      <img src="img/SkillswapLogo.jpg" alt="SkillSwap Logo" class="nav-logo-img">
       <span class="nav-logo-text">SkillSwap</span>
     </div>
     <div class="nav-links">
@@ -273,14 +269,7 @@
 <div class="screen" id="auth">
   <div class="auth-box">
     <div class="auth-logo">
-      <svg viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="18" fill="url(#lg2)"/>
-        <path d="M15 20L18 23L25 16" stroke="#050a0d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        <defs><linearGradient id="lg2" x1="0" y1="0" x2="40" y2="40">
-          <stop offset="0%" stop-color="#00e5ff"/>
-          <stop offset="100%" stop-color="#00838f"/>
-        </linearGradient></defs>
-      </svg>
+      <img src="img/SkillswapLogo.jpg" alt="SkillSwap Logo" class="auth-logo-img">
       <span class="auth-logo-text">SkillSwap</span>
     </div>
 
@@ -353,6 +342,51 @@
         <button class="back-link" onclick="goTo('landing')">← volver al inicio</button>
       </div>
 
+      <!-- ── PANTALLA DE VERIFICACIÓN ── -->
+      <div class="form-pane" id="verifyPane">
+        <div class="verify-screen">
+          <div class="verify-icon-wrap">
+            <div class="verify-icon">✉️</div>
+            <div class="verify-pulse"></div>
+          </div>
+          <h2 class="verify-title">¡Revisa tu correo!</h2>
+          <p class="verify-sub">
+            Hemos enviado un enlace de verificación a:
+          </p>
+          <div class="verify-email-box">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" style="color:var(--cyan);flex-shrink:0;">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+            </svg>
+            <span id="verifyEmail">tu@correo.com</span>
+          </div>
+          <div class="verify-bonus" id="verifyBonus" style="display:none;">
+            🎁 ¡Bono .edu activado! +40 CH extra al verificar
+          </div>
+          <div class="verify-steps">
+            <div class="verify-step">
+              <div class="verify-step-num">1</div>
+              <span>Abre tu bandeja de entrada</span>
+            </div>
+            <div class="verify-step">
+              <div class="verify-step-num">2</div>
+              <span>Busca el correo de SkillSwap</span>
+            </div>
+            <div class="verify-step">
+              <div class="verify-step-num">3</div>
+              <span>Haz clic en el enlace de verificación</span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="goToLoginFromVerify()">
+            Ya verifiqué mi correo →
+          </button>
+          <p class="verify-hint">
+            ¿No recibiste el correo? Revisa tu carpeta de spam
+          </p>
+          <button class="back-link" onclick="switchPane('register')">← volver al registro</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>```
@@ -366,14 +400,7 @@
   <aside class="sidebar">
     <div class="sb-header">
       <div class="sb-logo">
-        <svg viewBox="0 0 40 40" fill="none" style="width:30px;height:30px;">
-          <circle cx="20" cy="20" r="18" fill="url(#lg3)"/>
-          <path d="M15 20L18 23L25 16" stroke="#050a0d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          <defs><linearGradient id="lg3" x1="0" y1="0" x2="40" y2="40">
-            <stop offset="0%" stop-color="#00e5ff"/>
-            <stop offset="100%" stop-color="#00838f"/>
-          </linearGradient></defs>
-        </svg>
+        <img src="img/SkillswapLogo.jpg" alt="SkillSwap Logo" class="sb-logo-img">
         <span class="sb-logo-text">SkillSwap</span>
       </div>
     </div>
@@ -524,7 +551,15 @@
       <div class="section" id="secProfile">
         <div class="profile-layout">
           <div class="profile-main-card">
-            <div class="prof-avatar" id="profAv">?</div>
+            <div class="prof-avatar-wrap">
+              <div class="prof-avatar" id="profAv">?</div>
+              <button class="prof-avatar-upload-btn" onclick="openProfileAvatarUpload()" title="Cambiar foto de perfil">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </button>
+            </div>
             <div class="prof-name"  id="profName">–</div>
             <div class="prof-code"  id="profCode">U----------</div>
             <div class="prof-stats">

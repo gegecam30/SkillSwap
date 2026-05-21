@@ -4,17 +4,22 @@
    Cargado primero en index.html
 ═══════════════════════════════════════════ */
 
+/* ── API: Detección automática de entorno ── */
+const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '')
+  ? 'http://127.0.0.1:8000'               // Modo desarrollo local
+  : 'https://api-skillswap.onrender.com';  // Modo producción en la nube
+
 const AVATARS = [
-  { bg: '#050a0d', img: '/img/Avatar1.png' },
-  { bg: 'linear-gradient(135deg,#60A5FA,#3B82F6)', icon: '🐬' },
-  { bg: 'linear-gradient(135deg,#34D399,#10B981)', icon: '🌿' },
-  { bg: 'linear-gradient(135deg,#F59E0B,#F97316)', icon: '🦊' },
-  { bg: 'linear-gradient(135deg,#EC4899,#BE185D)', icon: '🌸' },
-  { bg: 'linear-gradient(135deg,#8B5CF6,#6D28D9)', icon: '🔮' },
-  { bg: 'linear-gradient(135deg,#06B6D4,#0284C7)', icon: '🐳' },
-  { bg: 'linear-gradient(135deg,#F97316,#EF4444)', icon: '🔥' },
-  { bg: 'linear-gradient(135deg,#84CC16,#22C55E)', icon: '🌵' },
-  { bg: 'linear-gradient(135deg,#A78BFA,#60A5FA)', icon: '⚡' },
+  { bg: '#050a0d', img: 'img/Avatar1.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar2.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar3.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar4.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar5.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar6.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar7.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar8.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar9.png' },
+  { bg: '#0d1b2a', img: 'img/Avatar10.png' },
 ];
 
 const SERVICES = [
