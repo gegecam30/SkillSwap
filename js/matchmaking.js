@@ -519,19 +519,19 @@ function renderTasks() {
     activeGigs.map(gig => `
       <div class="gig-card">
         <div class="gig-head">
-          <div class="gig-av" style="background:${gig.expertBg};">${gig.expertIcon}</div>
+          <div class="gig-av" style="background:${gig.expertBg || 'var(--surface2)'};">${gig.expertIcon || '⏳'}</div>
           <div>
             <div class="gig-title">${gig.category}</div>
-            <div class="gig-sub">con ${gig.expertName} · ${gig.ch} CH en escrow</div>
+            <div class="gig-sub">con ${gig.expertName || 'Esperando Experto...'} · ${gig.ch} CH en escrow</div>
           </div>
           <span class="gig-status-badge ${statusClass(gig.status)}">${statusLabel(gig.status)}</span>
         </div>
         <div class="gig-progress">
           <div class="gig-prog-labels">
-            <span>Progreso</span><span>${gig.progress}%</span>
+            <span>Progreso</span><span>${gig.progress || 0}%</span>
           </div>
           <div class="gig-prog-bar">
-            <div class="gig-prog-fill" style="width:${gig.progress}%;"></div>
+            <div class="gig-prog-fill" style="width:${gig.progress || 0}%;"></div>
           </div>
         </div>
         <div class="gig-actions">
