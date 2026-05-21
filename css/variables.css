@@ -1,0 +1,45 @@
+/* css/variables.css */
+:root {
+  /* ── Fondo y Superficies (Extracto de tu página) ── */
+  --bg: #050a0d; 
+  --surface: #081217;
+  --surface2: rgba(0, 229, 255, 0.03);
+  --sidebar: #050a0d;
+  --card: #081217;
+  
+  /* ── Acentos Cyan Neón ── */
+  --cyan-main: #00e5ff;
+  --cyan-dark: #00838f;
+  --cyan-muted: #00bcd4;
+
+  /* ── Textos ── */
+  --text: #c9e8f0;
+  --text2: #bdf2fb;
+  --text3: #92dce8;
+  
+  /* ── Compatibilidad con tus CSS actuales (El truco mágico) ── */
+  --purple: var(--cyan-main);
+  --pink: var(--cyan-dark);
+  --blue: var(--cyan-muted);
+  --green: #00e5ff;
+  --orange: #4dd0e1;
+
+  --p-purple: rgba(0, 229, 255, 0.1);
+  --p-pink: rgba(0, 188, 212, 0.1);
+  --p-blue: rgba(0, 229, 255, 0.05);
+  --p-green: rgba(0, 229, 255, 0.15);
+  --p-yellow: rgba(77, 208, 225, 0.1);
+
+  /* ── Bordes y Sombras al estilo Gexel ── */
+  --border: rgba(0, 229, 255, 0.2);
+  --shadow: 0 0 15px rgba(0, 229, 255, 0.05);
+  --shadow-lg: 0 0 30px rgba(0, 229, 255, 0.15), 0 20px 40px rgba(0,0,0,0.6);
+  
+  --radius: 8px;
+  --transition: 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* Forzar modo oscuro permanente */
+[data-theme="light"], [data-theme="dark"] {
+  --bg: #050a0d;
+}

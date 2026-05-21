@@ -1,0 +1,98 @@
+/* css/landing.css COMPLETAMENTE CORREGIDO */
+
+/* css/landing.css */
+
+/* 1. Forzamos que solo sea visible cuando esté activo */
+.screen#landing.active {
+  display: flex !important;
+}
+
+/* 2. Le quitamos el display: flex genérico para que pueda ocultarse */
+#landing {
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ... (A partir de aquí mantén intacto el resto de tu landing.css, 
+   como .landing-nav, .hero, etc.) ... */
+
+.landing-nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 40px; z-index: 100;
+  background: rgba(5, 10, 13, 0.8); backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,229,255,0.1);
+}
+
+.nav-logo { display: flex; align-items: center; gap: 12px; }
+.nav-logo svg { width: 32px; height: 32px; }
+.nav-logo-text { font-family: 'Silkscreen', cursive; font-size: 20px; color: #fff; white-space: nowrap; }
+
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-cta { display: flex; gap: 12px; align-items: center; }
+
+/* REGLA CRÍTICA PARA PANTALLAS PEQUEÑAS / LAPTOPS */
+@media (max-width: 900px) {
+  .nav-links { display: none; } /* Oculta links centrales para que no colisionen */
+  .landing-nav { padding: 16px 20px; }
+  .nav-logo-text { display: none; } /* En móvil solo mostramos el ícono */
+}
+
+.hero {
+  padding: 140px 20px 60px; /* Da espacio a la barra superior */
+  text-align: center; position: relative; z-index: 1;
+}
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 4px;
+  color: var(--cyan-muted); text-transform: uppercase; margin-bottom: 20px;
+}
+
+.hero-title {
+  font-family: 'Silkscreen', cursive; font-size: clamp(32px, 6vw, 64px);
+  color: #fff; line-height: 1.1; margin-bottom: 15px;
+  text-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+}
+
+.hero-byline {
+  font-family: 'JetBrains Mono', monospace; font-size: clamp(14px, 2vw, 18px);
+  color: var(--cyan-main); margin-bottom: 40px; letter-spacing: 2px;
+}
+
+.hero-intro-box {
+  max-width: 700px; margin: 0 auto; background: rgba(0, 229, 255, 0.03);
+  border: 1px solid rgba(0, 229, 255, 0.15); border-radius: 8px; padding: 32px;
+  box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.02);
+  position: relative; display: flex;
+}
+
+.intro-text { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.8; color: var(--text2); }
+
+.cursor-blink {
+  display: inline-block; width: 8px; height: 1em; background: var(--cyan-main);
+  margin-left: 4px; vertical-align: middle; animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.plugins-section {
+  padding: 80px 24px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
+}
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--cyan-muted); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 12px;
+}
+
+.section-title { font-family: 'Silkscreen', cursive; font-size: 36px; color: #fff; margin-bottom: 40px; }
+
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
+.card-wrapper { display: flex; flex-direction: column; gap: 12px; }
+.card-version { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: bold; color: var(--cyan-main); text-transform: uppercase; }
+.card { height: 220px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); display: flex; align-items: flex-end; padding: 24px; }
+.card-content { position: relative; z-index: 3; }
+.card-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3); color: var(--cyan-main); padding: 4px 8px; border-radius: 4px; margin-bottom: 12px; display: inline-block; }
+.card-name { font-family: 'Silkscreen', cursive; font-size: 22px; color: #fff; margin-bottom: 8px; }
+.card-desc { font-size: 14px; color: var(--text3); line-height: 1.5; }
