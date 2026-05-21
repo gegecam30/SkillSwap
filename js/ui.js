@@ -150,13 +150,13 @@ function startDemo() {
     demoIdx++;
 
     // Simulate credit gain every 4 notifs
-    if (demoIdx % 4 === 0 && currentUser) {
-      currentUser.credits += Math.floor(Math.random() * 20 + 5);
+    if (demoIdx % 4 === 0 && window.currentUser) {
+      window.currentUser.credits += Math.floor(Math.random() * 20 + 5);
       const wbEl = document.getElementById('wbCredits');
-      if (wbEl) wbEl.textContent = currentUser.credits;
-
-      if (chartLine) {
-        chartLine.data.datasets[0].data.push(currentUser.credits);
+      if (wbEl) wbEl.textContent = window.currentUser.credits;
+      
+      if (typeof chartLine !== 'undefined' && chartLine) {
+        chartLine.data.datasets[0].data.push(window.currentUser.credits);
         chartLine.data.datasets[0].data.shift();
         chartLine.data.labels.push('');
         chartLine.data.labels.shift();

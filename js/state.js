@@ -15,16 +15,7 @@ const DB = {
 };
 
 // ── Session ──
-let currentUser = JSON.parse(localStorage.getItem('ss_current') || 'null');
-
-function saveSession(user) {
-  currentUser = user;
-  localStorage.setItem('ss_current', JSON.stringify(user));
-}
-function clearSession() {
-  currentUser = null;
-  localStorage.removeItem('ss_current');
-}
+// Eliminado el legacy currentUser para que toda la app use window.currentUser uniformemente.
 
 // ── Helpers ──
 function getInitials(name) {

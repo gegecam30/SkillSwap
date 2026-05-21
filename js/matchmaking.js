@@ -62,7 +62,7 @@ function closeAllModals() {
    STEP 1: Create Ticket
 ───────────────────────────────────────── */
 function openCreateTicket() {
-  if (!currentUser) return;
+  if (!window.currentUser) return;
   // Populate category select
   const sel = document.getElementById('ticketCategory');
   sel.innerHTML = '<option value="">Selecciona una categoría...</option>';
@@ -72,7 +72,7 @@ function openCreateTicket() {
     sel.appendChild(opt);
   });
   // Update balance display
-  document.getElementById('ticketBalance').textContent = currentUser.credits + ' CH disponibles';
+  document.getElementById('ticketBalance').textContent = window.currentUser.credits + ' CH disponibles';
   document.getElementById('ticketCH').value = '';
   document.getElementById('ticketDesc').value = '';
   document.querySelectorAll('.urgency-pill').forEach(p => p.classList.remove('active'));
@@ -96,7 +96,7 @@ function searchExperts() {
   if (!category) { pushNotif('⚠️','Error','Selecciona una categoría.','#FEF3C7'); return; }
   if (!desc)     { pushNotif('⚠️','Error','Describe tu necesidad.','#FEF3C7'); return; }
   if (!ch || ch < 1) { pushNotif('⚠️','Error','Ingresa los créditos a ofrecer.','#FEF3C7'); return; }
-  if (ch > currentUser.credits) { pushNotif('❌','Sin fondos','No tienes suficientes CH.','#FBE2F4'); return; }
+  if (ch > window.currentUser.credits) { pushNotif('❌','Sin fondos','No tienes suficientes CH.','#FBE2F4'); return; }
 
   activeTicket = { category, desc, ch, urgency };
 
@@ -189,7 +189,7 @@ async function lockEscrow() {
 
   // Preparamos los datos tal cual los pide Pydantic en nuestro backend
   const transactionData = {
-    sender_id: currentUser.id, // Asumiendo que el ID del usuario logueado está aquí
+    sender_id: window.currentUser.id, // Asumiendo que el ID del usuario logueado está aquí
     receiver_id: selectedExpert.id,
     service_id: activeTicket.id || "servicio_generico_123", // Temporal hasta que conectemos los servicios
     amount: activeTicket.ch
@@ -236,7 +236,7 @@ async function lockEscrow() {
     saveGigs();
     
     // Aquí puedes actualizar la UI (restar el saldo visualmente, crear el gig en la pantalla, etc.)
-    currentUser.credits -= activeTicket.ch; 
+    window.currentUser.credits -= activeTicket.ch; 
     updateCreditsUI();
     
     // Recargamos las tareas y el badge
@@ -252,7 +252,7 @@ async function lockEscrow() {
 
 function updateCreditsUI() {
   const el = document.getElementById('wbCredits');
-  if (el) el.textContent = currentUser.credits;
+  if (el) el.textContent = window.currentUser.credits;
 }
 
 /* ─────────────────────────────────────────
@@ -297,7 +297,7 @@ function renderChatMessages(messages) {
     if (msg.type === 'file') {
       wrapper.innerHTML = `
         <div class="msg-av" style="background:${isMe ? 'linear-gradient(135deg,#A78BFA,#EC4899)' : chatExpert?.bg || '#ccc'};">
-          ${isMe ? (currentUser?.avatarIcon || '🦄') : (chatExpert?.icon || '👤')}
+          ${isMe ? (window.currentUser?.avatarIcon || '🦄') : (chatExpert?.icon || '👤')}
         </div>
         <div>
           <div class="msg-file">
@@ -313,7 +313,7 @@ function renderChatMessages(messages) {
     } else {
       wrapper.innerHTML = `
         <div class="msg-av" style="background:${isMe ? 'linear-gradient(135deg,#A78BFA,#EC4899)' : chatExpert?.bg || '#ccc'};">
-          ${isMe ? (currentUser?.avatarIcon || '🦄') : (chatExpert?.icon || '👤')}
+          ${isMe ? (window.currentUser?.avatarIcon || '🦄') : (chatExpert?.icon || '👤')}
         </div>
         <div>
           <div class="msg-bubble">${msg.text}</div>
@@ -426,9 +426,9 @@ function submitReview() {
     saveGigs();
 
     // Give user back feeling of closure — expert "received" credits
-    currentUser.completedTasks = (currentUser.completedTasks || 0) + 1;
-    DB.update(currentUser);
-    saveSession(currentUser);
+    window.currentUser.completedTasks = (window.currentUser.completedTasks || 0) + 1;
+    DB.update(window.currentUser);
+    saveSession(window.currentUser);
   }
 
   closeModal('modalReview');
@@ -437,7 +437,7 @@ function submitReview() {
   pushNotif('🏆','Reseña publicada',`Tu reseña de ${selectedStars}⭐ ya está en el perfil de ${gig?.expertName}.`,'#E9D5FF');
 
   if (document.getElementById('secTasks').classList.contains('active')) renderTasks();
-  document.getElementById('statDone').textContent = currentUser.completedTasks;
+  document.getElementById('statDone').textContent = window.currentUser.completedTasks;
 }
 
 /* ─────────────────────────────────────────

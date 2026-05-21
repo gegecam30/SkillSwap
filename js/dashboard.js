@@ -35,7 +35,7 @@ async function initDashboard() {
         completedTasks: 0,
         completedMissions: session.completedMissions || [],
         // ── AQUÍ EL CAMBIO: Leemos directamente la ruta desde Supabase ──
-        avatarUrl: p.avatar_url || 'img/Avatar0.png'
+        avatarUrl: p.avatar_url || 'img/Avatar1.png'
       };
 
       localStorage.setItem('currentUser', JSON.stringify(window.currentUser));

@@ -351,20 +351,9 @@ function openProfileAvatarUpload() {
         if (profAv) profAv.innerHTML = imgTag;
         if (chipAv) chipAv.innerHTML = imgTag;
 
-        // Intentamos subir a Supabase Storage y guardar en SQL
-        if (window.currentUser.id && typeof uploadAvatarToSupabase === 'function') {
-          try {
-            if (typeof pushNotif === 'function') pushNotif('⏳', 'Subiendo...', 'Guardando imagen en la nube.', '#A78BFA');
-            
-            const publicUrl = await uploadAvatarToSupabase(window.currentUser.id, file);
-            
-            if (publicUrl && typeof saveSelectedAvatar === 'function') {
-              saveSelectedAvatar(publicUrl); // Esto actualiza la Base de Datos SQL
-            }
-          } catch (err) {
-            console.error(err);
-            if (typeof pushNotif === 'function') pushNotif('❌', 'Error', 'Fallo al subir la imagen.', '#ff2a6d');
-          }
+        // Guardamos el avatar en base64 en la base de datos (Backend)
+        if (window.currentUser.id && typeof saveSelectedAvatar === 'function') {
+          saveSelectedAvatar(dataUrl);
         }
       }
     };
