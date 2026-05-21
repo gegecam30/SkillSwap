@@ -217,11 +217,31 @@ async function lockEscrow() {
     closeModal('modalEscrow');
     pushNotif('🔒', '¡Escrow activado desde el Servidor!', `${activeTicket.ch} CH congelados.`, '#8e2cf9');
     
+    // Crear el gig y guardarlo
+    const newGig = {
+      id: 'gig_' + Date.now(),
+      category: activeTicket.category,
+      desc: activeTicket.desc,
+      ch: activeTicket.ch,
+      urgency: activeTicket.urgency,
+      expertId: selectedExpert.id,
+      expertName: selectedExpert.name,
+      expertIcon: selectedExpert.icon,
+      expertBg: selectedExpert.bg,
+      status: 'escrow',
+      progress: 0,
+      messages: []
+    };
+    activeGigs.push(newGig);
+    saveGigs();
+    
     // Aquí puedes actualizar la UI (restar el saldo visualmente, crear el gig en la pantalla, etc.)
     currentUser.credits -= activeTicket.ch; 
     updateCreditsUI();
     
-    // Recargamos las tareas
+    // Recargamos las tareas y el badge
+    const badge = document.getElementById('gigsCount');
+    if (badge) badge.textContent = activeGigs.filter(g => g.status !== 'done').length || 0;
     if (document.getElementById('secTasks').classList.contains('active')) renderTasks();
 
   } catch (error) {

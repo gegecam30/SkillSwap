@@ -789,6 +789,46 @@
 window.addEventListener('DOMContentLoaded', () => {
   renderAvatarPicker();
 
+  // ── Manejo de redirect de Supabase (Verificación de Email) ──
+  const hash = window.location.hash;
+  if (hash && hash.includes('access_token=')) {
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    
+    if (accessToken) {
+      try {
+        // Extraer payload del JWT
+        const payloadBase64 = accessToken.split('.')[1];
+        const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        const payload = JSON.parse(jsonPayload);
+        const userId = payload.sub; // ID en Supabase
+        
+        if (userId) {
+          // Crear sesión local (initDashboard lo actualizará con datos reales)
+          const user = { id: userId, avatar: 0 };
+          localStorage.setItem('currentUser', JSON.stringify(user));
+        }
+      } catch(e) {
+        console.error("Error procesando token de Supabase", e);
+      }
+    }
+    
+    // Limpiar la URL para ocultar el token
+    window.history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    
+    // Forzar ir al dashboard directamente
+    goTo('dashboard');
+    
+    if (typeof pushNotif === 'function') {
+      setTimeout(() => pushNotif('✅', 'Acceso correcto', 'Has iniciado sesión exitosamente.', '#00e5ff'), 500);
+    }
+    return; // Evita el flujo normal de boot
+  }
+
   // Iniciar con sesión activa SOLO si existe en el almacenamiento real
   if (localStorage.getItem('currentUser')) {
     goTo('dashboard');
