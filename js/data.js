@@ -6,8 +6,8 @@
 
 /* ── API: Detección automática de entorno ── */
 const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '')
-  ? 'http://127.0.0.1:8000'               // Modo desarrollo local
-  : 'https://api-skillswap.onrender.com';  // Modo producción en la nube
+  ? 'http://127.0.0.1:8000'       // Modo desarrollo local
+  : 'https://api.gexel.fun';      // Tu modo producción oficial en la nube
 
 const AVATARS = [
   { bg: '#050a0d', img: 'img/Avatar1.png' },
