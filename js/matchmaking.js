@@ -155,7 +155,7 @@ async function postTicketToMarketplace() {
         status: 'pending',
         desc: desc,
         ch: ch,
-        chat: []
+        messages: []
       };
       
       activeGigs.push(pendingGig);

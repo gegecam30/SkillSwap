@@ -95,7 +95,11 @@ async function syncPlatformStats(userId) {
     if(data.success) {
       // Actualizamos los widgets de la cabecera (Header superior)
       if(document.getElementById('liveCount')) document.getElementById('liveCount').textContent = data.online;
-      if(document.getElementById('sbLiveCount')) document.getElementById('sbLiveCount').textContent = data.online;
+      if(document.getElementById('sbLiveCount')) {
+        const textNode = document.getElementById('sbLiveCount').nextSibling;
+        if (textNode && textNode.nodeType === 3) textNode.nodeValue = ' en línea';
+        document.getElementById('sbLiveCount').textContent = data.online;
+      }
       if(document.getElementById('liveExchanges')) document.getElementById('liveExchanges').textContent = data.exchanges;
       
       // Actualizamos la tarjeta de "Conexiones" en el dashboard
@@ -792,7 +796,7 @@ async function adminDeletePost(postId) {
   if (!confirm('¿Seguro que deseas eliminar este post? Esta acción es irreversible.')) return;
   
   try {
-    const res = await fetch(`${API}/admin/posts?admin_id=${window.currentUser.id}&post_id=${postId}`, { method: 'DELETE' });
+    const res = await fetch(`${API}/admin/posts/${postId}?admin_id=${window.currentUser.id}`, { method: 'DELETE' });
     const data = await res.json();
     if (data.success) {
       if(typeof pushNotif === 'function') pushNotif('✅', 'Admin', 'Post eliminado correctamente.', '#ff2a6d');
@@ -809,7 +813,7 @@ async function adminDeleteService(serviceId) {
   if (!confirm('¿Seguro que deseas eliminar este servicio del marketplace?')) return;
   
   try {
-    const res = await fetch(`${API}/admin/services?admin_id=${window.currentUser.id}&service_id=${serviceId}`, { method: 'DELETE' });
+    const res = await fetch(`${API}/admin/services/${serviceId}?admin_id=${window.currentUser.id}`, { method: 'DELETE' });
     const data = await res.json();
     if (data.success) {
       if(typeof pushNotif === 'function') pushNotif('✅', 'Admin', 'Servicio eliminado correctamente.', '#ff2a6d');
