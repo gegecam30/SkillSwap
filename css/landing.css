@@ -44,6 +44,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: var(--bg);
+  background-image: linear-gradient(rgba(5, 10, 13, 0.80), rgba(5, 10, 13, 0.96)), url('../img/Fondomc.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-eyebrow {
