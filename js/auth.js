@@ -177,12 +177,17 @@ async function handleLogin() {
   }
 
   try {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if(loadingOverlay) loadingOverlay.style.display = 'flex';
+
     const res = await fetch(`${API}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: pass })
     });
     const data = await res.json();
+    
+    if(loadingOverlay) loadingOverlay.style.display = 'none';
 
     if (data.error) {
       if (typeof pushNotif === 'function') pushNotif('❌', 'Error', data.error, '#ff2a6d');
@@ -200,6 +205,8 @@ async function handleLogin() {
     localStorage.setItem('currentUser', JSON.stringify(user));
     goTo('dashboard');
   } catch (error) {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if(loadingOverlay) loadingOverlay.style.display = 'none';
     if (typeof pushNotif === 'function') pushNotif('🔌', 'Sin Conexión', 'No se pudo contactar al servidor.', '#ff2a6d');
   }
 }
@@ -209,7 +216,11 @@ async function handleRegister() {
   const name   = document.getElementById('regName').value.trim();
   const email  = document.getElementById('regEmail').value.trim();
   const pass   = document.getElementById('regPass').value;
-  const skills = document.getElementById('regSkills').value.trim();
+  
+  // Leer valores múltiples del select
+  const skillsSelect = document.getElementById('regSkills');
+  const selectedOptions = Array.from(skillsSelect.selectedOptions).map(opt => opt.value);
+  const skills = selectedOptions.join(', ');
 
   // 1. Validaciones básicas
   if (!name || !email || !pass || !skills) {
@@ -225,12 +236,17 @@ async function handleRegister() {
   }
 
   try {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if(loadingOverlay) loadingOverlay.style.display = 'flex';
+
     const res = await fetch(`${API}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: name, email: email, password: pass, skills: skills })
     });
     const data = await res.json();
+    
+    if(loadingOverlay) loadingOverlay.style.display = 'none';
 
     if (data.error) {
       if (typeof pushNotif === 'function') pushNotif('❌', 'Error', data.error, '#ff2a6d');
@@ -246,6 +262,8 @@ async function handleRegister() {
     showVerifyScreen(email, data.bonus_applied);
 
   } catch (error) {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if(loadingOverlay) loadingOverlay.style.display = 'none';
     if (typeof pushNotif === 'function') pushNotif('🔌', 'Sin Conexión', 'No se pudo contactar al servidor.', '#ff2a6d');
   }
 }

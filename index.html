@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 <!-- Supabase JS (descomentar cuando conectes Supabase) -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
 <link rel="stylesheet" href="css/variables.css">
@@ -67,8 +68,16 @@
 
 <!-- FAB ticket -->
 <button class="fab-ticket hidden" id="fabTicket" onclick="openCreateTicket()">
-  ✦ Nuevo Ticket
+  <i class="ph ph-plus-circle"></i> Nuevo Ticket
 </button>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; flex-direction:column; color:white;">
+  <i class="ph ph-spinner-gap" style="font-size:48px; color:var(--cyan); animation:spin 1s linear infinite;"></i>
+  <h3 style="margin-top:20px; font-family:'Silkscreen';">Conectando...</h3>
+  <p style="color:var(--text2); font-size:14px; margin-top:10px;">El servidor puede tardar hasta 50s en despertar</p>
+</div>
+<style>@keyframes spin { 100% { transform:rotate(360deg); } }</style>
 
 
 <!-- ══════════════════════════════════════════
@@ -134,32 +143,32 @@
     <h2 class="ls-title">Todo lo que necesitas para <span class="grad">colaborar</span></h2>
     <div class="features-grid">
       <div class="feat-card">
-        <div class="feat-icon" style="background:rgba(0,229,255,0.08);">⭐</div>
+        <div class="feat-icon" style="background:rgba(0,229,255,0.08);"><i class="ph ph-star"></i></div>
         <h3>Créditos de Habilidad</h3>
         <p>Sistema de intercambio basado en tokens (CH) que elimina la barrera económica. 100 CH de bienvenida al registrarte.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon" style="background:rgba(0,229,255,0.08);">🔒</div>
+        <div class="feat-icon" style="background:rgba(0,229,255,0.08);"><i class="ph ph-lock-key"></i></div>
         <h3>Sistema Escrow</h3>
         <p>Los CH se congelan al contratar y solo se liberan cuando tú apruebas el entregable. 0% riesgo de estafa.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon" style="background:rgba(0,229,255,0.08);">🎯</div>
+        <div class="feat-icon" style="background:rgba(0,229,255,0.08);"><i class="ph ph-crosshair"></i></div>
         <h3>Matchmaking</h3>
         <p>El motor notifica solo a expertos validados y disponibles. Sin spam, sin ruido — solo coincidencias reales.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon" style="background:rgba(0,229,255,0.08);">🏆</div>
+        <div class="feat-icon" style="background:rgba(0,229,255,0.08);"><i class="ph ph-trophy"></i></div>
         <h3>Reputación</h3>
         <p>Cada reseña construye tu perfil profesional verificable. Rangos gamificados que premian calidad y puntualidad.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon" style="background:rgba(0,229,255,0.08);">💼</div>
+        <div class="feat-icon" style="background:rgba(0,229,255,0.08);"><i class="ph ph-briefcase"></i></div>
         <h3>Portafolio</h3>
         <p>Proyectos reales con reseñas auténticas que puedes mostrar a empleadores. 100% demostrable.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon" style="background:rgba(0,229,255,0.08);">⚖️</div>
+        <div class="feat-icon" style="background:rgba(0,229,255,0.08);"><i class="ph ph-scales"></i></div>
         <h3>Disputas</h3>
         <p>Peer-review para conflictos en menos de 24h. Un árbitro neutral toma la decisión basándose en evidencia.</p>
       </div>
@@ -212,37 +221,37 @@
     <h2 class="ls-title">Construido por <span class="grad">estudiantes</span></h2>
     <div class="team-grid">
       <div class="team-card">
-        <div class="team-av" style="background:#00e5ff;">NV</div>
+        <div class="team-av"><img src="img/team-nv.jpg" alt="Nicolas Vergaray" class="team-av-img" onerror="this.style.display='none'; this.parentNode.style.background='#00e5ff'; this.parentNode.textContent='NV';"></div>
         <div class="team-name">Nicolas Vergaray</div>
         <div class="team-role">Product Manager</div>
         <div class="team-desc">Visión estratégica y gestión ágil del proyecto</div>
       </div>
       <div class="team-card">
-        <div class="team-av" style="background:#00bcd4;">RM</div>
+        <div class="team-av"><img src="img/team-rm.jpg" alt="Rodrigo Mamani" class="team-av-img" onerror="this.style.display='none'; this.parentNode.style.background='#00bcd4'; this.parentNode.textContent='RM';"></div>
         <div class="team-name">Rodrigo Mamani</div>
         <div class="team-role">UX Designer</div>
         <div class="team-desc">Arquitectura de información y experiencia de usuario</div>
       </div>
       <div class="team-card">
-        <div class="team-av" style="background:#00838f;">GM</div>
+        <div class="team-av"><img src="img/team-gm.jpg" alt="Gian Mejía" class="team-av-img" onerror="this.style.display='none'; this.parentNode.style.background='#00838f'; this.parentNode.textContent='GM';"></div>
         <div class="team-name">Gian Mejía</div>
         <div class="team-role">Market Researcher</div>
         <div class="team-desc">Análisis competitivo y estrategia de crecimiento</div>
       </div>
       <div class="team-card">
-        <div class="team-av" style="background:#00e5ff;">WJ</div>
+        <div class="team-av"><img src="img/team-wj.jpg" alt="Wilmer Jiménez" class="team-av-img" onerror="this.style.display='none'; this.parentNode.style.background='#00e5ff'; this.parentNode.textContent='WJ';"></div>
         <div class="team-name">Wilmer Jiménez</div>
         <div class="team-role">Backend Architect</div>
         <div class="team-desc">Lógica de negocio y arquitectura de datos</div>
       </div>
       <div class="team-card">
-        <div class="team-av" style="background:#00bcd4;">GC</div>
+        <div class="team-av"><img src="img/team-gc.jpg" alt="Gengis Cam" class="team-av-img" onerror="this.style.display='none'; this.parentNode.style.background='#00bcd4'; this.parentNode.textContent='GC';"></div>
         <div class="team-name">Gengis Cam</div>
         <div class="team-role">QA Engineer</div>
         <div class="team-desc">Calidad del ecosistema y estrategia de testing</div>
       </div>
       <div class="team-card">
-        <div class="team-av" style="background:#00838f;">OQ</div>
+        <div class="team-av"><img src="img/team-oq.jpg" alt="Olger Quispe" class="team-av-img" onerror="this.style.display='none'; this.parentNode.style.background='#00838f'; this.parentNode.textContent='OQ';"></div>
         <div class="team-name">Olger Quispe</div>
         <div class="team-role">Technical Writer</div>
         <div class="team-desc">Documentación técnica y gestión del conocimiento</div>
@@ -330,11 +339,22 @@
         </div>
         <div class="field">
           <label>Tus habilidades</label>
-          <div class="inp-wrap">
+          <div class="inp-wrap" style="padding-right:0;">
             <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <input type="text" id="regSkills" placeholder="Diseño, Programación, Marketing...">
+            <select id="regSkills" multiple style="background:transparent; border:none; color:var(--text); width:100%; outline:none; font-family:'Inter'; height:80px; padding:8px 0;">
+              <option value="Programación">Programación</option>
+              <option value="Diseño">Diseño</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Idiomas">Idiomas</option>
+              <option value="Matemáticas">Matemáticas</option>
+              <option value="Ciencias">Ciencias</option>
+              <option value="Redacción">Redacción</option>
+              <option value="Fotografía">Fotografía</option>
+              <option value="Música">Música</option>
+              <option value="Otros">Otros</option>
+            </select>
           </div>
-          <div class="inp-hint">// separa con comas</div>
+          <div class="inp-hint">// usa Ctrl o Cmd para seleccionar múltiples</div>
         </div>
         <button class="btn btn-primary btn-full" onclick="handleRegister()">&gt;_ Crear cuenta</button>
         <div class="divider"><span>¿ya tienes cuenta?</span></div>
@@ -346,7 +366,7 @@
       <div class="form-pane" id="verifyPane">
         <div class="verify-screen">
           <div class="verify-icon-wrap">
-            <div class="verify-icon">✉️</div>
+            <div class="verify-icon"><i class="ph ph-envelope"></i></div>
             <div class="verify-pulse"></div>
           </div>
           <h2 class="verify-title">¡Revisa tu correo!</h2>
@@ -361,7 +381,7 @@
             <span id="verifyEmail">tu@correo.com</span>
           </div>
           <div class="verify-bonus" id="verifyBonus" style="display:none;">
-            🎁 ¡Bono .edu activado! +40 CH extra al verificar
+            <i class="ph ph-gift"></i> ¡Bono .edu activado! +40 CH extra al verificar
           </div>
           <div class="verify-steps">
             <div class="verify-step">
@@ -402,14 +422,14 @@
       <button class="sb-toggle-btn" onclick="toggleSidebar()" style="background: none; border: none; color: var(--text1); cursor: pointer; padding: 4px;">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
-      <div class="sb-logo" onclick="goTo('app', 'home')" style="cursor: pointer; flex: 1;">
+      <div class="sb-logo" onclick="switchSection(document.querySelector('[data-sec=\'home\']'))" style="cursor: pointer; flex: 1;">
         <img src="img/SkillswapLogo.jpg" alt="SkillSwap Logo" class="sb-logo-img">
         <span class="sb-logo-text">SkillSwap</span>
       </div>
     </div>
     <div class="sb-live">
       <div class="live-dot"></div>
-      <span><span class="sb-live-num" id="sbLiveCount">523</span> en línea</span>
+      <span><span class="sb-live-num" id="sbLiveCount">···</span> cargando...</span>
     </div>
     <nav class="sb-nav">
       <button class="sb-item active" data-sec="home" onclick="switchSection(this)">
@@ -451,7 +471,7 @@
         <p id="secSub">Resumen de tu actividad</p>
       </div>
       <div class="dash-header-right">
-        <button class="btn btn-secondary btn-sm" onclick="startOnboarding()">🗺 Tour</button>
+        <button class="btn btn-secondary btn-sm" onclick="startOnboarding()"><i class="ph ph-compass"></i> Tour</button>
         <div class="user-chip">
           <div class="user-chip-av" id="chipAv">?</div>
           <div>
@@ -470,6 +490,15 @@
             <div class="wb-title" id="wbTitle">¡Bienvenido! 👋</div>
             <div class="wb-sub">Listo para intercambiar habilidades</div>
           </div>
+          <div class="wb-animation-path">
+            <svg class="wb-snail" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 13a6 6 0 1 0 12 0 4 4 0 1 0-8 0 2 2 0 0 0 4 0"/>
+              <path d="M10 13h6a2 2 0 0 0 0-4h-2"/>
+              <path d="M16 9V5a2 2 0 0 1 4 0v4"/>
+              <path d="M22 5h-4"/>
+            </svg>
+            <div class="wb-dots"></div>
+          </div>
           <div class="wb-credits">
             <div class="wb-credits-num" id="wbCredits">100</div>
             <div class="wb-credits-label">Créditos CH</div>
@@ -477,42 +506,42 @@
         </div>
         <div class="stats-row">
           <div class="s-card">
-            <div class="s-icon" style="background:rgba(0,229,255,0.1);font-size:22px;">⭐</div>
+            <div class="s-icon" style="background:rgba(0,229,255,0.1);font-size:22px;"><i class="ph ph-star"></i></div>
             <div><div class="s-val" id="statRating">5.0</div><div class="s-label">Rating</div></div>
           </div>
           <div class="s-card">
-            <div class="s-icon" style="background:rgba(0,229,255,0.1);font-size:22px;">✅</div>
+            <div class="s-icon" style="background:rgba(0,229,255,0.1);font-size:22px;"><i class="ph ph-check-circle"></i></div>
             <div><div class="s-val" id="statDone">0</div><div class="s-label">Completadas</div></div>
           </div>
           <div class="s-card">
-            <div class="s-icon" style="background:rgba(0,229,255,0.1);font-size:22px;">🤝</div>
+            <div class="s-icon" style="background:rgba(0,229,255,0.1);font-size:22px;"><i class="ph ph-handshake"></i></div>
             <div><div class="s-val" id="statConnections">0</div><div class="s-label">Conexiones</div></div>
           </div>
         </div>
         <div class="chart-row">
           <div class="chart-card">
-            <div class="card-title">📈 Créditos — últimos 7 días</div>
+            <div class="card-title"><i class="ph ph-chart-line-up"></i> Créditos — últimos 7 días</div>
             <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
           </div>
           <div class="chart-card">
-            <div class="card-title">🎯 Habilidades activas</div>
+            <div class="card-title"><i class="ph ph-crosshair"></i> Habilidades activas</div>
             <div class="chart-wrap"><canvas id="chartDough"></canvas></div>
           </div>
         </div>
         <div class="two-col">
           <div class="card">
-            <div class="card-title">🏷 Mis Habilidades</div>
+            <div class="card-title"><i class="ph ph-tag"></i> Mis Habilidades</div>
             <div class="skills-wrap" id="dashSkills"></div>
           </div>
           <div class="card">
-            <div class="card-title">🔔 Actividad Reciente</div>
+            <div class="card-title"><i class="ph ph-bell"></i> Actividad Reciente</div>
             <div class="activity-list" id="actList">
               <div class="act-item">
-                <div class="act-icon">🎉</div>
+                <div class="act-icon"><i class="ph ph-confetti"></i></div>
                 <div><div class="act-title">¡Bienvenido a SkillSwap!</div><div class="act-time">Ahora mismo</div></div>
               </div>
               <div class="act-item">
-                <div class="act-icon">💰</div>
+                <div class="act-icon"><i class="ph ph-coins"></i></div>
                 <div><div class="act-title">+100 créditos de bienvenida</div><div class="act-time">Hace 1 min</div></div>
               </div>
             </div>
@@ -563,6 +592,7 @@
                 </svg>
               </button>
             </div>
+            <button class="btn btn-ghost btn-sm" onclick="openEditProfile()" style="margin-bottom:12px;"><i class="ph ph-pencil-simple"></i> Editar Perfil</button>
             <div class="prof-name"  id="profName">–</div>
             <div class="prof-code"  id="profCode">U----------</div>
             <div class="prof-stats">
@@ -802,6 +832,47 @@
                onkeydown="if(event.key==='Enter')sendDM()">
         <button class="btn btn-primary btn-sm" onclick="sendDM()" style="padding:10px 16px;">Enviar</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Editar Perfil ── -->
+<div class="modal-overlay" id="modalEditProfile">
+  <div class="modal" style="max-width: 400px;">
+    <div class="modal-head">
+      <div>
+        <h2><i class="ph ph-user-gear"></i> Editar Perfil</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalEditProfile')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field" style="margin-bottom: 16px;">
+        <label>Nombre a mostrar</label>
+        <div class="inp-wrap">
+          <input type="text" id="editProfName" placeholder="Tu nombre" style="width:100%; border:none; background:transparent; color:var(--text); outline:none;">
+        </div>
+      </div>
+      <div class="field" style="margin-bottom: 16px;">
+        <label>Tus habilidades</label>
+        <div class="inp-wrap" style="padding-right:0;">
+          <select id="editProfSkills" multiple style="background:transparent; border:none; color:var(--text); width:100%; outline:none; font-family:'Inter'; height:80px; padding:8px 0;">
+            <option value="Programación">Programación</option>
+            <option value="Diseño">Diseño</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Idiomas">Idiomas</option>
+            <option value="Matemáticas">Matemáticas</option>
+            <option value="Ciencias">Ciencias</option>
+            <option value="Redacción">Redacción</option>
+            <option value="Fotografía">Fotografía</option>
+            <option value="Música">Música</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('modalEditProfile')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProfileEdit()">Guardar cambios</button>
     </div>
   </div>
 </div>

@@ -34,6 +34,8 @@ async function initDashboard() {
         rating: 5.0,
         completedTasks: 0,
         completedMissions: session.completedMissions || [],
+        role: p.role || 'user',
+        is_banned: p.is_banned || false,
         // ── AQUÍ EL CAMBIO: Leemos directamente la ruta desde Supabase ──
         avatarUrl: p.avatar_url || 'img/Avatar1.png'
       };
@@ -50,7 +52,7 @@ async function initDashboard() {
       if(document.getElementById('chipName')) document.getElementById('chipName').textContent = u.name.split(' ')[0];
       if(document.getElementById('chipCode')) document.getElementById('chipCode').textContent = u.code;
 
-      if(document.getElementById('wbTitle')) document.getElementById('wbTitle').textContent = `¡Hola, ${u.name.split(' ')[0]}! 👋`;
+      if(document.getElementById('wbTitle')) document.getElementById('wbTitle').textContent = `¡Hola, ${u.name.split(' ')[0]}!`;
       if(document.getElementById('wbCredits')) document.getElementById('wbCredits').textContent = u.credits;
       if(document.getElementById('statRating')) document.getElementById('statRating').textContent = u.rating.toFixed(1);
       if(document.getElementById('statDone')) document.getElementById('statDone').textContent = u.completedTasks;
@@ -189,8 +191,11 @@ async function renderMarketplace() {
           <div class="svc-tags">${tagsHtml}</div>
           <div class="svc-foot">
             <div class="svc-price" style="${s.price === 0 ? 'color:#ff2a6d; font-weight:bold;' : ''}">${s.price === 0 ? 'GRATIS' : s.price + ' CH'}</div>
-            <button class="btn btn-primary btn-sm" style="${btnStyle}" ${isCompleted ? 'disabled' : ''} 
-                    onclick="requestService('${s.id}', '${s.provider_id}', '${s.title.replace(/'/g, "\\'")}', ${s.price})">${btnText}</button>
+            <div style="display:flex; gap:8px;">
+              ${window.currentUser?.role === 'admin' ? `<button class="btn btn-sm" style="background:#ff2a6d; color:white; border:none;" onclick="adminDeleteService('${s.id}')"><i class="ph ph-trash"></i></button>` : ''}
+              <button class="btn btn-primary btn-sm" style="${btnStyle}" ${isCompleted ? 'disabled' : ''} 
+                      onclick="requestService('${s.id}', '${s.provider_id}', '${s.title.replace(/'/g, "\\'")}', ${s.price})">${btnText}</button>
+            </div>
           </div>`;
         grid.appendChild(card);
       });
@@ -273,6 +278,14 @@ async function requestService(serviceId, providerId, title, price) {
       return;
     }
     
+    // Marcar el servicio como aceptado para que salga del marketplace
+    try {
+      await fetch(`${API}/services/${serviceId}/accept`, { method: 'PATCH' });
+      renderMarketplace(); // Recargar el marketplace para que desaparezca
+    } catch (e) {
+      console.warn('No se pudo marcar como aceptado:', e);
+    }
+
     if (isBusco) {
       if(typeof pushNotif === 'function') pushNotif('🤝', 'Trabajo Aceptado', `Los ${price} CH están en Escrow. ¡Manos a la obra!`, '#F59E0B');
       // Abrir chat con el solicitante
@@ -447,17 +460,26 @@ function renderFilteredPosts(category) {
       <div class="post-head" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
         <div class="post-av" style="background: var(--p-purple); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; color: #050a0d; overflow:hidden; flex-shrink:0;">${avatarHTML}</div>
         <div style="flex: 1;">
-          <div class="post-author" style="font-weight: 600; font-size: 14px; color: var(--text);">${authorName}</div>
-          <div class="post-role" style="font-size: 11px; color: var(--cyan); font-family: 'JetBrains Mono';">${authorCode}</div>
+          <div class="post-name" style="font-weight: 600; font-size: 14px; color: var(--text); display:flex; align-items:center; gap:6px;">
+            ${authorName} 
+            ${p.category === 'admin' ? '<span style="background:var(--pink); color:white; font-size:9px; padding:2px 4px; border-radius:4px; font-weight:bold;">STAFF</span>' : ''}
+            ${p.category === 'Comunidad' ? '<span style="color:#00e5ff; font-size:12px;" title="Moderador Comunitario">🔹</span>' : ''}
+          </div>
+          <div class="post-code" style="font-size: 11px; color: var(--text3); font-family: 'JetBrains Mono';">${authorCode} • ${p.category}</div>
         </div>
-        <div style="text-align: right;">
-          <span style="font-size: 10px; background: rgba(142, 44, 249, 0.1); color: #8e2cf9; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(142, 44, 249, 0.3); font-family: 'JetBrains Mono';">${p.category}</span>
-          <div class="post-time" style="font-size: 10px; color: var(--text3); margin-top: 4px;">${timeString}</div>
+        <div style="margin-left:auto; display:flex; gap:8px;">
+          ${window.currentUser?.role === 'admin' ? `<button class="btn btn-sm" style="background:none; border:1px solid #ff2a6d; color:#ff2a6d; padding:4px 8px;" onclick="adminDeletePost('${p.id}')" title="Eliminar Post"><i class="ph ph-trash"></i></button>` : ''}
+          <div style="font-size:11px; color:var(--text3); margin-top:8px;">${timeString}</div>
         </div>
       </div>
-      <div class="post-body" style="font-size: 13.5px; color: var(--text2); line-height: 1.5; white-space: pre-wrap;">${p.content}</div>
+      <div class="post-body" style="font-size: 14px; color: var(--text2); line-height: 1.5; white-space: pre-wrap; margin-bottom:12px;">${p.content}</div>
       ${imageHTML}
-      ${showDM ? `<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border);"><button class="btn btn-secondary btn-sm" onclick="openDMChat('${authorId}', '${authorName.replace(/'/g, "\\'")}')">💬 Enviar mensaje</button></div>` : ''}
+      <div class="post-foot" style="display: flex; gap: 16px; border-top: 1px solid var(--border); padding-top: 12px;">
+        <button style="background:none; border:none; color:var(--text3); cursor:pointer; display:flex; align-items:center; gap:6px; font-size:13px; transition:color 0.2s;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--text3)'">
+          <i class="ph ph-thumbs-up"></i> Útil
+        </button>
+        ${showDM ? `<button style="background:none; border:none; color:var(--text3); cursor:pointer; display:flex; align-items:center; gap:6px; font-size:13px; transition:color 0.2s;" onmouseover="this.style.color='var(--purple)'" onmouseout="this.style.color='var(--text3)'" onclick="openDMChat('${authorId}', '${authorName.replace(/'/g, "\\'")}')"><i class="ph ph-chat-teardrop-text"></i> Enviar Mensaje</button>` : ''}
+      </div>
     </div>
   `}).join('');
 }
@@ -709,5 +731,93 @@ async function sendDM() {
   } catch (err) {
     console.error('Error enviando mensaje:', err);
     if(typeof pushNotif === 'function') pushNotif('❌', 'Error', 'No se pudo enviar el mensaje.', '#ff2a6d');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   EDICIÓN DE PERFIL
+═══════════════════════════════════════════ */
+function openEditProfile() {
+  if (!window.currentUser) return;
+  document.getElementById('editProfName').value = window.currentUser.name;
+  
+  const skillsSelect = document.getElementById('editProfSkills');
+  Array.from(skillsSelect.options).forEach(opt => {
+    opt.selected = window.currentUser.skills.includes(opt.value);
+  });
+  
+  openModal('modalEditProfile');
+}
+
+async function saveProfileEdit() {
+  if (!window.currentUser) return;
+  const newName = document.getElementById('editProfName').value.trim();
+  const skillsSelect = document.getElementById('editProfSkills');
+  const selectedSkills = Array.from(skillsSelect.selectedOptions).map(opt => opt.value);
+  
+  if (!newName || selectedSkills.length === 0) {
+    if(typeof pushNotif === 'function') pushNotif('⚠️', 'Error', 'Completa tu nombre y habilidades.', '#ff2a6d');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/profile/${window.currentUser.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ display_name: newName, skills: selectedSkills })
+    });
+    const data = await res.json();
+    
+    if (data.success) {
+      window.currentUser.name = newName;
+      window.currentUser.skills = selectedSkills;
+      localStorage.setItem('currentUser', JSON.stringify(window.currentUser));
+      
+      closeModal('modalEditProfile');
+      initDashboard(); // Recargar la UI con los nuevos datos
+      if(typeof pushNotif === 'function') pushNotif('✅', 'Guardado', 'Perfil actualizado.', '#00e5ff');
+    } else {
+      if(typeof pushNotif === 'function') pushNotif('❌', 'Error', data.error, '#ff2a6d');
+    }
+  } catch (err) {
+    console.error(err);
+    if(typeof pushNotif === 'function') pushNotif('🔌', 'Conexión', 'No se pudo actualizar.', '#ff2a6d');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   ADMIN TOOLS
+═══════════════════════════════════════════ */
+async function adminDeletePost(postId) {
+  if (!confirm('¿Seguro que deseas eliminar este post? Esta acción es irreversible.')) return;
+  
+  try {
+    const res = await fetch(`${API}/admin/posts?admin_id=${window.currentUser.id}&post_id=${postId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      if(typeof pushNotif === 'function') pushNotif('✅', 'Admin', 'Post eliminado correctamente.', '#ff2a6d');
+      fetchAndRenderPosts();
+    } else {
+      if(typeof pushNotif === 'function') pushNotif('❌', 'Admin Error', data.error, '#ff2a6d');
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function adminDeleteService(serviceId) {
+  if (!confirm('¿Seguro que deseas eliminar este servicio del marketplace?')) return;
+  
+  try {
+    const res = await fetch(`${API}/admin/services?admin_id=${window.currentUser.id}&service_id=${serviceId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      if(typeof pushNotif === 'function') pushNotif('✅', 'Admin', 'Servicio eliminado correctamente.', '#ff2a6d');
+      renderMarketplace();
+    } else {
+      if(typeof pushNotif === 'function') pushNotif('❌', 'Admin Error', data.error, '#ff2a6d');
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
